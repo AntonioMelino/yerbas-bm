@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="YerbasBM.API/YerbasBM.API.csproj" />
+  <Project Path="YerbasBM.Application/YerbasBM.Application.csproj" />
+  <Project Path="YerbasBM.Domain/YerbasBM.Domain.csproj" />
+  <Project Path="YerbasBM.Infrastructure/YerbasBM.Infrastructure.csproj" />
+</Solution>

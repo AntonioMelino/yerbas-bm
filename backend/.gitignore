@@ -1,0 +1,17 @@
+# .NET build output
+bin/
+obj/
+
+# Visual Studio / Rider user-specific files
+*.user
+*.suo
+.vs/
+.idea/
+
+# Local secrets / connection strings (nunca commitear credenciales reales)
+appsettings.*.local.json
+*.env
+.env
+
+# Configuración local de Claude Code (permisos específicos de esta máquina)
+.claude/settings.local.json
