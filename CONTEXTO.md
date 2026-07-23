@@ -200,6 +200,12 @@ CREATE TABLE admin_users (
 | POST   | `/api/auth/login`  | Login del dueño |
 | POST   | `/api/auth/logout` | Logout          |
 
+### Sistema
+
+| Método | Endpoint      | Descripción                                                                                                 |
+| ------ | ------------- | -------------------------------------------------------------------------------------------------------------- |
+| GET    | `/api/health` | Chequeo de salud de la API (no depende de la base de datos). Implementado en el setup inicial del backend. |
+
 ### DTOs principales
 
 ```typescript
