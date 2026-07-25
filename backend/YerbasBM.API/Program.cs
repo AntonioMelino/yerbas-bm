@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using YerbasBM.Application.Interfaces;
+using YerbasBM.Application.Services;
 using YerbasBM.Infrastructure.Data;
+using YerbasBM.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,11 @@ builder.Services.AddSwaggerGen();
 // ConnectionStrings__DefaultConnection, para no commitear credenciales reales).
 builder.Services.AddDbContext<YerbasBMDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Repositorios y servicios de Categorías (Clean Architecture: Infrastructure implementa
+// las interfaces definidas en Application).
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
