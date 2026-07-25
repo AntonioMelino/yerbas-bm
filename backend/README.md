@@ -77,20 +77,20 @@ curl http://localhost:5035/api/health
 backend/
 ├── YerbasBM.sln                    # Solución
 ├── YerbasBM.API/                   # Capa de presentación
-│   ├── Controllers/                 # Endpoints REST (HealthController, y a futuro Products/Categories/Auth)
+│   ├── Controllers/                 # Endpoints REST (HealthController, CategoriesController, y a futuro Products/Auth)
 │   ├── Program.cs                   # Composición de servicios y pipeline HTTP
 │   └── appsettings.json             # Configuración (sin secretos)
 ├── YerbasBM.Application/            # Casos de uso / lógica de negocio
-│   ├── DTOs/                        # Data Transfer Objects (a agregar por feature)
-│   ├── Interfaces/                  # Contratos (IProductService, etc.)
-│   ├── Services/                    # Implementación de la lógica de negocio
-│   └── Mappings/                    # Perfiles de AutoMapper
+│   ├── DTOs/                        # Data Transfer Objects (CategoryDto, CreateCategoryDto, UpdateCategoryDto, y a agregar por feature)
+│   ├── Interfaces/                  # Contratos (ICategoryRepository, ICategoryService, y a futuro IProductService, etc.)
+│   ├── Services/                    # Implementación de la lógica de negocio (CategoryService, y a futuro ProductService, etc.)
+│   └── Common/                      # Utilidades compartidas (SlugGenerator)
 ├── YerbasBM.Domain/                 # Núcleo del dominio, sin dependencias externas
 │   ├── Entities/                    # Category, Product, AdminUser
 │   └── Enums/                       # Enumeraciones (a agregar según se necesiten)
 └── YerbasBM.Infrastructure/         # Detalles de infraestructura
     ├── Data/                        # DbContext (YerbasBMDbContext) y Migrations
-    ├── Repositories/                # Implementaciones de acceso a datos (a agregar por feature)
+    ├── Repositories/                # Implementaciones de acceso a datos (CategoryRepository, y a futuro por feature)
     └── Services/                    # Servicios externos, ej. Supabase Storage (a agregar)
 ```
 
@@ -100,11 +100,15 @@ backend/
 
 ## Endpoints disponibles
 
-| Método | Endpoint      | Descripción                                                    |
-| ------ | ------------- | --------------------------------------------------------------- |
-| GET    | `/api/health` | Chequeo de salud de la API (no depende de la base de datos).    |
+| Método | Endpoint                | Descripción                                                    |
+| ------ | ------------------------ | --------------------------------------------------------------- |
+| GET    | `/api/health`            | Chequeo de salud de la API (no depende de la base de datos).    |
+| GET    | `/api/categories`        | Lista todas las categorías.                                     |
+| POST   | `/api/categories`        | Crea una categoría (el slug se genera automáticamente del nombre). |
+| PUT    | `/api/categories/{id}`   | Actualiza el nombre de una categoría (regenera el slug si cambia). |
+| DELETE | `/api/categories/{id}`   | Elimina una categoría.                                          |
 
-El resto de los endpoints (productos, categorías, autenticación admin — sección 6 de `CONTEXTO.md`) se implementan en features siguientes, cada uno en su propia rama `feature/*`.
+El resto de los endpoints (productos, autenticación admin — sección 6 de `CONTEXTO.md`) se implementan en features siguientes, cada uno en su propia rama `feature/*`.
 
 ---
 

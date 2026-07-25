@@ -2,7 +2,7 @@
 
 # Proyecto Fullstack: Catálogo + Carrito + Pedido por WhatsApp
 
-# Última actualización: 2026-07-22
+# Última actualización: 2026-07-24
 
 ---
 

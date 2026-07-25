@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-24] - Feature: categories-crud
+- Rama: feature/categories-crud
+- Qué se hizo: Implementado el CRUD completo de Categorías siguiendo Clean Architecture. Se agregaron los DTOs (`CategoryDto`, `CreateCategoryDto`, `UpdateCategoryDto`), las interfaces `ICategoryRepository`/`ICategoryService`, un generador de slugs (`SlugGenerator`, saca acentos y genera slugs únicos con sufijo numérico ante colisiones), el repositorio EF Core (`CategoryRepository`) y el servicio de negocio (`CategoryService`). Se expuso `CategoriesController` con `GET /api/categories`, `POST /api/categories`, `PUT /api/categories/{id}` y `DELETE /api/categories/{id}`, tal como define la sección 6 de CONTEXTO.md. El slug se genera automáticamente a partir del nombre (no se recibe del cliente). Se verificó que el proyecto compila sin errores y que las 4 rutas quedan correctamente registradas (confirmado vía Swagger); la prueba funcional contra datos reales queda pendiente de una conexión a PostgreSQL/Supabase configurada localmente.
+- Archivos principales afectados: `backend/YerbasBM.Application/DTOs/{CategoryDto,CreateCategoryDto,UpdateCategoryDto}.cs`, `backend/YerbasBM.Application/Common/SlugGenerator.cs`, `backend/YerbasBM.Application/Interfaces/{ICategoryRepository,ICategoryService}.cs`, `backend/YerbasBM.Application/Services/CategoryService.cs`, `backend/YerbasBM.Infrastructure/Repositories/CategoryRepository.cs`, `backend/YerbasBM.API/Controllers/CategoriesController.cs`, `backend/YerbasBM.API/Program.cs`
+- Autor: Claude
+
 ## [2026-07-22] - Feature: backend-initial-setup
 - Rama: feature/backend-initial-setup
 - Qué se hizo: Setup inicial del backend .NET 8 con Clean Architecture (proyectos API, Application, Domain, Infrastructure). Se configuró Entity Framework Core con Npgsql (PostgreSQL/Supabase), se crearon las entidades `Category`, `Product` y `AdminUser` según el modelo de datos de la sección 5 de CONTEXTO.md, y se generó la migration inicial (`InitialCreate`) que crea las tablas `categories`, `products` y `admin_users`. Se agregó un endpoint de salud (`GET /api/health`) y se verificó que el proyecto levanta y responde localmente.
