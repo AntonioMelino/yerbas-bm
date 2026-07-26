@@ -57,15 +57,30 @@ curl http://localhost:5035/api/health
 # {"status":"ok","timestampUtc":"..."}
 ```
 
+### Crear el primer admin
+
+No hay endpoint de registro (solo existe un admin — el dueño del emprendimiento, sección 10 de CONTEXTO.md). Para crearlo, configurá `Seed:AdminUsername`/`Seed:AdminPassword` (user-secrets o variables de entorno) y arrancá la API una vez con la base ya migrada: si la tabla `admin_users` está vacía, `AdminUserSeeder` crea el usuario con la contraseña hasheada (bcrypt) y no vuelve a correr en los arranques siguientes.
+
+```bash
+cd YerbasBM.API
+dotnet user-secrets set "Seed:AdminUsername" "antonio"
+dotnet user-secrets set "Seed:AdminPassword" "una-contraseña-fuerte"
+dotnet run --project ../YerbasBM.API
+```
+
+Después de confirmar que el login funciona, se recomienda borrar esas dos entradas de user-secrets (o desconfigurar las variables de entorno) para que no queden credenciales en texto plano dando vueltas.
+
 ---
 
 ## Variables de entorno
 
-| Variable                                     | Dónde se usa                          | Descripción                                                                 |
-| --------------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------- |
-| `ConnectionStrings__DefaultConnection`        | `Program.cs`                           | Connection string a PostgreSQL (Supabase). Formato Npgsql.                   |
-| `Jwt__Key`, `Jwt__Issuer`, `Jwt__Audience`     | Autenticación admin (a implementar)     | Configuración del JWT para el login del panel admin (sección 10 de CONTEXTO.md). |
-| `Supabase__Url`, `Supabase__ServiceKey`       | Subida de imágenes (a implementar)      | Acceso a Supabase Storage para las imágenes de productos.                    |
+| Variable                                          | Dónde se usa                | Descripción                                                                                    |
+| -------------------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| `ConnectionStrings__DefaultConnection`             | `Program.cs`                 | Connection string a PostgreSQL (Supabase). Formato Npgsql.                                       |
+| `Jwt__Key`                                         | Autenticación admin (JWT)     | Clave secreta para firmar/validar los tokens (mínimo 32 bytes / 256 bits, si no `AuthController` la rechaza). Sin configurar, el login queda deshabilitado (el resto de la API sigue funcionando) y se loguea un warning al arrancar. |
+| `Jwt__Issuer`, `Jwt__Audience`, `Jwt__ExpirationMinutes` | Autenticación admin (JWT) | Issuer/audience del token y minutos de validez (default 480 = 8hs). Tienen valores por defecto en `appsettings.json`. |
+| `Seed__AdminUsername`, `Seed__AdminPassword`       | Bootstrap del admin           | Credenciales del único admin, usadas solo una vez si `admin_users` está vacía (ver "Crear el primer admin"). |
+| `Supabase__Url`, `Supabase__ServiceKey`             | Subida de imágenes (a implementar) | Acceso a Supabase Storage para las imágenes de productos.                                   |
 
 `__` (doble guion bajo) es el separador que usa .NET para mapear variables de entorno a secciones anidadas de `appsettings.json` (ej. `ConnectionStrings__DefaultConnection` → `ConnectionStrings:DefaultConnection`).
 
@@ -77,21 +92,21 @@ curl http://localhost:5035/api/health
 backend/
 ├── YerbasBM.sln                    # Solución
 ├── YerbasBM.API/                   # Capa de presentación
-│   ├── Controllers/                 # Endpoints REST (HealthController, CategoriesController, ProductsController, y a futuro Auth)
-│   ├── Program.cs                   # Composición de servicios y pipeline HTTP
+│   ├── Controllers/                 # Endpoints REST (HealthController, CategoriesController, ProductsController, AuthController)
+│   ├── Program.cs                   # Composición de servicios y pipeline HTTP (incluye auth JWT y el seed del admin)
 │   └── appsettings.json             # Configuración (sin secretos)
 ├── YerbasBM.Application/            # Casos de uso / lógica de negocio
-│   ├── DTOs/                        # Data Transfer Objects (Category*, Product*, y a agregar por feature)
-│   ├── Interfaces/                  # Contratos (ICategoryRepository/Service, IProductRepository/Service, y a futuro Auth)
-│   ├── Services/                    # Implementación de la lógica de negocio (CategoryService, ProductService, y a futuro Auth)
+│   ├── DTOs/                        # Data Transfer Objects (Category*, Product*, Login*)
+│   ├── Interfaces/                  # Contratos (ICategoryRepository/Service, IProductRepository/Service, IAuthService, IAdminUserRepository, ITokenGenerator)
+│   ├── Services/                    # Implementación de la lógica de negocio (CategoryService, ProductService, AuthService)
 │   └── Common/                      # Utilidades compartidas (SlugGenerator)
 ├── YerbasBM.Domain/                 # Núcleo del dominio, sin dependencias externas
 │   ├── Entities/                    # Category, Product, AdminUser
 │   └── Enums/                       # Enumeraciones (a agregar según se necesiten)
 └── YerbasBM.Infrastructure/         # Detalles de infraestructura
-    ├── Data/                        # DbContext (YerbasBMDbContext) y Migrations
-    ├── Repositories/                # Implementaciones de acceso a datos (CategoryRepository, ProductRepository, y a futuro Auth)
-    └── Services/                    # Servicios externos, ej. Supabase Storage (a agregar)
+    ├── Data/                        # DbContext (YerbasBMDbContext), Migrations y AdminUserSeeder
+    ├── Repositories/                # Implementaciones de acceso a datos (CategoryRepository, ProductRepository, AdminUserRepository)
+    └── Services/                    # Servicios externos: JwtTokenGenerator, y a futuro Supabase Storage
 ```
 
 **Regla de dependencias:** `Domain` no depende de nada. `Application` depende de `Domain`. `Infrastructure` depende de `Application` y `Domain`. `API` depende de `Application` e `Infrastructure`. Esto permite cambiar la base de datos o servicios externos sin tocar la lógica de negocio.
@@ -100,20 +115,21 @@ backend/
 
 ## Endpoints disponibles
 
-| Método | Endpoint                | Descripción                                                    |
-| ------ | ------------------------ | --------------------------------------------------------------- |
-| GET    | `/api/health`            | Chequeo de salud de la API (no depende de la base de datos).    |
-| GET    | `/api/categories`        | Lista todas las categorías.                                     |
-| POST   | `/api/categories`        | Crea una categoría (el slug se genera automáticamente del nombre). |
-| PUT    | `/api/categories/{id}`   | Actualiza el nombre de una categoría (regenera el slug si cambia). |
-| DELETE | `/api/categories/{id}`   | Elimina una categoría.                                          |
-| GET    | `/api/products`          | Lista los productos activos. Acepta `?category={slug}` para filtrar. |
-| GET    | `/api/products/{id}`     | Devuelve el detalle de un producto.                             |
-| POST   | `/api/products`          | Crea un producto (`imageUrl` se recibe como texto; la subida a Supabase Storage queda pendiente). |
-| PUT    | `/api/products/{id}`     | Actualiza un producto, incluyendo `isActive`/`isFeatured`.       |
-| DELETE | `/api/products/{id}`     | Elimina un producto.                                            |
+| Método | Endpoint                | Auth   | Descripción                                                    |
+| ------ | ------------------------ | ------ | --------------------------------------------------------------- |
+| GET    | `/api/health`            | No     | Chequeo de salud de la API (no depende de la base de datos).    |
+| POST   | `/api/auth/login`        | No     | Login del admin. Devuelve el JWT (`token`, `expiresAtUtc`, `username`) si las credenciales son correctas. |
+| GET    | `/api/categories`        | No     | Lista todas las categorías.                                     |
+| POST   | `/api/categories`        | **Sí** | Crea una categoría (el slug se genera automáticamente del nombre). |
+| PUT    | `/api/categories/{id}`   | **Sí** | Actualiza el nombre de una categoría (regenera el slug si cambia). |
+| DELETE | `/api/categories/{id}`   | **Sí** | Elimina una categoría.                                          |
+| GET    | `/api/products`          | No     | Lista los productos activos. Acepta `?category={slug}` para filtrar. |
+| GET    | `/api/products/{id}`     | No     | Devuelve el detalle de un producto.                             |
+| POST   | `/api/products`          | **Sí** | Crea un producto (`imageUrl` se recibe como texto; la subida a Supabase Storage queda pendiente). |
+| PUT    | `/api/products/{id}`     | **Sí** | Actualiza un producto, incluyendo `isActive`/`isFeatured`.       |
+| DELETE | `/api/products/{id}`     | **Sí** | Elimina un producto.                                            |
 
-El resto de los endpoints (autenticación admin — sección 6 de `CONTEXTO.md`) se implementan en features siguientes, cada uno en su propia rama `feature/*`.
+Los endpoints marcados con auth **Sí** requieren el header `Authorization: Bearer {token}` obtenido de `/api/auth/login`; sin él (o con un token inválido/expirado) devuelven `401 Unauthorized`. La subida de imágenes a Supabase Storage (sección 9 de `CONTEXTO.md`) queda pendiente de una feature aparte.
 
 ---
 

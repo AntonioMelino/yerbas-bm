@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YerbasBM.Application.DTOs;
 using YerbasBM.Application.Interfaces;
@@ -27,7 +28,8 @@ public class CategoriesController : ControllerBase
         return Ok(categories);
     }
 
-    /// <summary>Crea una categoría nueva. El slug se genera automáticamente a partir del nombre.</summary>
+    /// <summary>Crea una categoría nueva. El slug se genera automáticamente a partir del nombre. Requiere sesión de admin.</summary>
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<CategoryDto>> Create([FromBody] CreateCategoryDto dto)
     {
@@ -35,7 +37,8 @@ public class CategoriesController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, category);
     }
 
-    /// <summary>Actualiza el nombre de una categoría existente.</summary>
+    /// <summary>Actualiza el nombre de una categoría existente. Requiere sesión de admin.</summary>
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<CategoryDto>> Update(Guid id, [FromBody] UpdateCategoryDto dto)
     {
@@ -48,7 +51,8 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    /// <summary>Elimina una categoría.</summary>
+    /// <summary>Elimina una categoría. Requiere sesión de admin.</summary>
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

@@ -2,7 +2,7 @@
 
 # Proyecto Fullstack: Catálogo + Carrito + Pedido por WhatsApp
 
-# Última actualización: 2026-07-24
+# Última actualización: 2026-07-26
 
 ---
 
@@ -180,25 +180,25 @@ CREATE TABLE admin_users (
 | GET    | `/api/products`                 | Listar todos los productos activos |
 | GET    | `/api/products?category={slug}` | Filtrar por categoría              |
 | GET    | `/api/products/{id}`            | Detalle de un producto             |
-| POST   | `/api/products`                 | Crear producto (admin)             |
-| PUT    | `/api/products/{id}`            | Actualizar producto (admin)        |
-| DELETE | `/api/products/{id}`            | Eliminar producto (admin)          |
+| POST   | `/api/products`                 | Crear producto (admin, requiere JWT) |
+| PUT    | `/api/products/{id}`            | Actualizar producto (admin, requiere JWT) |
+| DELETE | `/api/products/{id}`            | Eliminar producto (admin, requiere JWT) |
 
 ### Categorías
 
 | Método | Endpoint               | Descripción                  |
 | ------ | ---------------------- | ---------------------------- |
 | GET    | `/api/categories`      | Listar todas las categorías  |
-| POST   | `/api/categories`      | Crear categoría (admin)      |
-| PUT    | `/api/categories/{id}` | Actualizar categoría (admin) |
-| DELETE | `/api/categories/{id}` | Eliminar categoría (admin)   |
+| POST   | `/api/categories`      | Crear categoría (admin, requiere JWT) |
+| PUT    | `/api/categories/{id}` | Actualizar categoría (admin, requiere JWT) |
+| DELETE | `/api/categories/{id}` | Eliminar categoría (admin, requiere JWT) |
 
 ### Autenticación (Admin)
 
-| Método | Endpoint           | Descripción     |
-| ------ | ------------------ | --------------- |
-| POST   | `/api/auth/login`  | Login del dueño |
-| POST   | `/api/auth/logout` | Logout          |
+| Método | Endpoint           | Descripción     | Estado |
+| ------ | ------------------ | --------------- | ------ |
+| POST   | `/api/auth/login`  | Login del dueño. Devuelve un JWT (`token`, `expiresAtUtc`, `username`) que se envía como `Authorization: Bearer {token}` en las rutas de admin. | Implementado |
+| POST   | `/api/auth/logout` | No aplica: al ser JWT stateless, el "logout" es del lado del cliente (descartar el token guardado en `localStorage`). | No implementado (por diseño) |
 
 ### Sistema
 
@@ -407,6 +407,8 @@ fontFamily: {
 | 1   | Imágenes del hero (¿usar foto propia o stock?)                       | PENDIENTE                           |
 | 2   | ¿El dueño necesita ver historial de pedidos?                         | PENDIENTE (por ahora solo WhatsApp) |
 | 3   | Cambiar número de WhatsApp al real del negocio antes del lanzamiento | PENDIENTE                           |
+| 4   | Rate limiting / lockout en `POST /api/auth/login` (hoy sin throttling) | PENDIENTE (bajo riesgo, un solo admin) |
+| 5   | Timing side-channel en `AuthService.LoginAsync` (permite enumerar el username por latencia) | PENDIENTE (bajo riesgo, mismo motivo) |
 
 ---
 
