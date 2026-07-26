@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YerbasBM.Application.DTOs;
 using YerbasBM.Application.Interfaces;
@@ -39,7 +40,8 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-    /// <summary>Crea un producto nuevo.</summary>
+    /// <summary>Crea un producto nuevo. Requiere sesión de admin.</summary>
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ProductDto>> Create([FromBody] CreateProductDto dto)
     {
@@ -47,7 +49,8 @@ public class ProductsController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, product);
     }
 
-    /// <summary>Actualiza un producto existente.</summary>
+    /// <summary>Actualiza un producto existente. Requiere sesión de admin.</summary>
+    [Authorize]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<ProductDto>> Update(Guid id, [FromBody] UpdateProductDto dto)
     {
@@ -60,7 +63,8 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-    /// <summary>Elimina un producto.</summary>
+    /// <summary>Elimina un producto. Requiere sesión de admin.</summary>
+    [Authorize]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
