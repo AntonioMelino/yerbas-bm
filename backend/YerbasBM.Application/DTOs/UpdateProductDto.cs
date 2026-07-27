@@ -23,7 +23,12 @@ public class UpdateProductDto
     [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo.")]
     public int Stock { get; set; }
 
-    /// <summary>URL pública de la imagen del producto.</summary>
+    /// <summary>
+    /// URL pública de la imagen del producto (la actual, o una nueva ya subida a
+    /// Supabase Storage). La resuelve
+    /// <see cref="YerbasBM.API.Controllers.ProductsController"/> antes de llamar al
+    /// servicio; el cliente nunca la manda directamente.
+    /// </summary>
     public string? ImageUrl { get; set; }
 
     /// <summary>Id de la categoría a la que pertenece el producto (opcional).</summary>

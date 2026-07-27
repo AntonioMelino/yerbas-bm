@@ -38,6 +38,11 @@ builder.Services.AddScoped<IAdminUserRepository, AdminUserRepository>();
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+// Subida de imágenes de producto a Supabase Storage (sección 9 de CONTEXTO.md).
+// Falla recién al intentar subir una imagen si Supabase:Url/ServiceKey no están
+// configurados, no al construir el servicio (no debe romper el resto de Products).
+builder.Services.AddHttpClient<IProductImageStorage, SupabaseProductImageStorage>();
+
 // Autenticación JWT: valida los tokens emitidos por JwtTokenGenerator en las
 // rutas marcadas con [Authorize] (las mutaciones de admin de Categories/Products).
 var jwtSection = builder.Configuration.GetSection("Jwt");

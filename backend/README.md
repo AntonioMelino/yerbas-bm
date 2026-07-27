@@ -106,7 +106,7 @@ backend/
 └── YerbasBM.Infrastructure/         # Detalles de infraestructura
     ├── Data/                        # DbContext (YerbasBMDbContext), Migrations y AdminUserSeeder
     ├── Repositories/                # Implementaciones de acceso a datos (CategoryRepository, ProductRepository, AdminUserRepository)
-    └── Services/                    # Servicios externos: JwtTokenGenerator, y a futuro Supabase Storage
+    └── Services/                    # Servicios externos: JwtTokenGenerator, SupabaseProductImageStorage
 ```
 
 **Regla de dependencias:** `Domain` no depende de nada. `Application` depende de `Domain`. `Infrastructure` depende de `Application` y `Domain`. `API` depende de `Application` e `Infrastructure`. Esto permite cambiar la base de datos o servicios externos sin tocar la lógica de negocio.
@@ -125,11 +125,11 @@ backend/
 | DELETE | `/api/categories/{id}`   | **Sí** | Elimina una categoría.                                          |
 | GET    | `/api/products`          | No     | Lista los productos activos. Acepta `?category={slug}` para filtrar. |
 | GET    | `/api/products/{id}`     | No     | Devuelve el detalle de un producto.                             |
-| POST   | `/api/products`          | **Sí** | Crea un producto (`imageUrl` se recibe como texto; la subida a Supabase Storage queda pendiente). |
-| PUT    | `/api/products/{id}`     | **Sí** | Actualiza un producto, incluyendo `isActive`/`isFeatured`.       |
-| DELETE | `/api/products/{id}`     | **Sí** | Elimina un producto.                                            |
+| POST   | `/api/products`          | **Sí** | Crea un producto. `multipart/form-data`: campos del producto + `Image` (JPG/PNG/WebP, máx. 2 MB, obligatoria). Se sube a Supabase Storage antes de guardar el producto. |
+| PUT    | `/api/products/{id}`     | **Sí** | Actualiza un producto, incluyendo `isActive`/`isFeatured`. `multipart/form-data`; `Image` es opcional (si no se envía, se conserva la imagen actual). |
+| DELETE | `/api/products/{id}`     | **Sí** | Elimina un producto (no borra la imagen del bucket — ver decisión pendiente #6 en CONTEXTO.md). |
 
-Los endpoints marcados con auth **Sí** requieren el header `Authorization: Bearer {token}` obtenido de `/api/auth/login`; sin él (o con un token inválido/expirado) devuelven `401 Unauthorized`. La subida de imágenes a Supabase Storage (sección 9 de `CONTEXTO.md`) queda pendiente de una feature aparte.
+Los endpoints marcados con auth **Sí** requieren el header `Authorization: Bearer {token}` obtenido de `/api/auth/login`; sin él (o con un token inválido/expirado) devuelven `401 Unauthorized`.
 
 ---
 

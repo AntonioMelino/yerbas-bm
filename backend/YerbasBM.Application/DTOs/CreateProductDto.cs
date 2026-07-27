@@ -4,8 +4,6 @@ namespace YerbasBM.Application.DTOs;
 
 /// <summary>
 /// Datos requeridos para crear un producto desde el panel admin.
-/// La subida de imagen a Supabase Storage se maneja en una feature aparte;
-/// por ahora <see cref="ImageUrl"/> se recibe como texto.
 /// </summary>
 public class CreateProductDto
 {
@@ -25,7 +23,11 @@ public class CreateProductDto
     [Range(0, int.MaxValue, ErrorMessage = "El stock no puede ser negativo.")]
     public int Stock { get; set; }
 
-    /// <summary>URL pública de la imagen del producto.</summary>
+    /// <summary>
+    /// URL pública de la imagen ya subida a Supabase Storage. La resuelve
+    /// <see cref="YerbasBM.API.Controllers.ProductsController"/> antes de llamar al
+    /// servicio; el cliente nunca la manda directamente (manda el archivo).
+    /// </summary>
     public string? ImageUrl { get; set; }
 
     /// <summary>Id de la categoría a la que pertenece el producto (opcional).</summary>
