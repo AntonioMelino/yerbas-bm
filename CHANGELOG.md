@@ -1,7 +1,13 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Fix: home-categories-placement
+- Rama: `feature/mobile-home-categories-fix`
+- Qué se hizo: Se ocultó la sección de chips de categorías que aparecía arriba de "Productos destacados" tanto en mobile como en desktop. El catálogo completo (con sus propios filtros de categoría) sigue estando más abajo en la Home, justo antes del CTA de WhatsApp, que es donde el usuario puede explorar por categoría.
+- Archivos principales afectados: `frontend/src/pages/HomePage.tsx`
+- Autor: Kimi
+
 ## [2026-07-28] - Feature: home-catalog-section
-- Rama: `feature/home-categories-placement`
+- Rama: `feature/home-catalog-section`
 - Qué se hizo: Se ajustó la Home para que respete fielmente la estructura del preview visual estático (`preview/index.html`): Hero → chips de categorías → Destacados → Nosotros → Catálogo completo → CTA WhatsApp. Se extrajo la sección de catálogo con filtros y búsqueda a un nuevo componente reutilizable `CatalogSection.tsx`, que se usa tanto en la Home (justo antes del CTA) como en `/productos` (manteniendo la sincronización con el query param `?categoria={slug}`). Los chips de categorías volvieron a su lugar original arriba de "Productos destacados", como ornamento de transición hacia los destacados.
 - Archivos principales afectados: `frontend/src/pages/HomePage.tsx`, `frontend/src/pages/ProductsPage.tsx`, `frontend/src/components/CatalogSection.tsx`
 - Autor: Kimi

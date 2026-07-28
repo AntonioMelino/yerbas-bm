@@ -94,8 +94,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categorías */}
-      <section className="max-w-7xl mx-auto px-5 sm:px-8 py-20">
+      {/* Categorías: ocultas en la Home porque el catálogo completo más abajo cumple esta función */}
+      <section className="hidden max-w-7xl mx-auto px-5 sm:px-8 py-20">
         <div className="ornament flex items-center gap-4 mb-12">
           <span className="font-display text-lime text-lg">✦</span>
         </div>
