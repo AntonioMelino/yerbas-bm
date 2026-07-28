@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useCartStore } from '../stores/cartStore'
+import { useUiStore } from '../stores/uiStore'
 
 const NAV_LINKS = [
   { to: '/', label: 'Inicio' },
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const totalItems = useCartStore((state) => state.totalItems())
+  const openCart = useUiStore((state) => state.openCart)
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `transition-colors hover:text-yerba-400 ${isActive ? 'text-yerba-400' : 'text-yerba-300'}`
@@ -34,8 +36,14 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Carrito con badge de cantidad (el drawer llega en otra feature) */}
-          <span className="relative text-yerba-300" title="Carrito">
+          {/* Carrito con badge de cantidad — abre el CartDrawer */}
+          <button
+            type="button"
+            onClick={openCart}
+            className="relative text-yerba-300 transition-colors hover:text-yerba-400"
+            title="Carrito"
+            aria-label="Abrir carrito"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -55,7 +63,7 @@ export default function Navbar() {
                 {totalItems}
               </span>
             )}
-          </span>
+          </button>
 
           {/* Botón hamburguesa (mobile) */}
           <button

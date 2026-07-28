@@ -1,8 +1,10 @@
 // Tarjeta de producto del catálogo: imagen (URL pública de Supabase, se usa
 // directo), nombre, categoría, precio y badge de destacado.
+// Al hacer click abre el ProductModal con el detalle (vía uiStore).
 
 import type { Product } from '../types'
 import { formatPrice } from '../utils/format'
+import { useUiStore } from '../stores/uiStore'
 
 interface ProductCardProps {
   /** Producto tal como lo devuelve GET /api/products. */
@@ -10,8 +12,13 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const openProductModal = useUiStore((state) => state.openProductModal)
+
   return (
-    <article className="group overflow-hidden rounded-xl border border-yerba-700 bg-yerba-800 shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/40">
+    <article
+      onClick={() => openProductModal(product)}
+      className="group cursor-pointer overflow-hidden rounded-xl border border-yerba-700 bg-yerba-800 shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/40"
+    >
       <div className="relative aspect-square overflow-hidden bg-yerba-900">
         {product.imageUrl ? (
           <img

@@ -51,11 +51,13 @@ npm run lint      # oxlint
 ```
 src/
 ├── components/          # Componentes reutilizables
-│   ├── Navbar.tsx       # Navbar público (links, badge del carrito)
+│   ├── Navbar.tsx       # Navbar público (links, botón del carrito con badge)
 │   ├── Footer.tsx       # Footer público (redes, WhatsApp, crédito)
-│   ├── ProductCard.tsx  # Tarjeta de producto del catálogo
+│   ├── ProductCard.tsx  # Tarjeta de producto — click abre el ProductModal
+│   ├── ProductModal.tsx # Modal de detalle con selector de cantidad y "Agregar al carrito"
+│   ├── CartDrawer.tsx   # Drawer lateral del carrito + botón "Hacer pedido por WhatsApp"
 │   ├── Spinner.tsx      # Indicador de carga
-│   ├── PublicLayout.tsx # Marco de las páginas públicas (Navbar + Outlet + Footer)
+│   ├── PublicLayout.tsx # Marco de las páginas públicas (monta Navbar, Footer, CartDrawer, ProductModal)
 │   └── AdminLayout.tsx  # Marco del panel admin + guarda de sesión (redirige a login)
 ├── pages/
 │   ├── HomePage.tsx     # Hero, destacados (isFeatured) y categorías
@@ -66,10 +68,10 @@ src/
 │       ├── ProductFormPage.tsx    # Alta y edición de producto (multipart/form-data)
 │       └── CategoriesAdminPage.tsx# Alta, renombrado y eliminación de categorías
 ├── hooks/               # Hooks de TanStack Query (useProducts, useCategories + mutaciones)
-├── stores/              # Zustand: cartStore (carrito) y authStore (sesión admin)
+├── stores/              # Zustand: cartStore (carrito), authStore (sesión admin), uiStore (drawer/modal)
 ├── services/            # Cliente HTTP (api.ts) y servicios por recurso
 ├── types/               # Interfaces TypeScript que reflejan los DTOs del backend
-├── utils/               # Helpers (formato de precios)
+├── utils/               # Helpers (formato de precios, armado del mensaje de WhatsApp)
 ├── App.tsx              # Definición de rutas
 └── main.tsx             # Entry point + QueryClientProvider
 ```
@@ -107,7 +109,14 @@ src/
 - **imageUrl**: es la URL pública final de Supabase Storage; se usa directo en
   los `<img>`, sin procesamiento adicional.
 
-## Pendiente (features siguientes)
+## Carrito → pedido por WhatsApp
 
-- Carrito → pedido por WhatsApp (el store del carrito ya existe en
-  `src/stores/cartStore.ts`; falta el drawer y el armado del mensaje).
+- Click en una `ProductCard` abre el `ProductModal` (detalle + cantidad +
+  "Agregar al carrito"); el ícono del Navbar abre el `CartDrawer`.
+- El carrito persiste en `localStorage` (Zustand `persist`, clave
+  `yerbasbm_cart`) y permite modificar cantidades, quitar ítems y vaciarlo.
+- "Hacer pedido por WhatsApp" arma el mensaje con el formato de CONTEXTO.md
+  sección 8 (ítems con cantidad y subtotal, total, nombre opcional del
+  cliente) y abre `https://wa.me/{VITE_WHATSAPP_NUMBER}?text={mensaje}` en una
+  pestaña nueva. El número actual es de testing — cambiar por el real del
+  negocio antes del lanzamiento.
