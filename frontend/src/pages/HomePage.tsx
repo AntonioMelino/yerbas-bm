@@ -1,6 +1,8 @@
-// Home pública: hero con la identidad de la marca, chips de categorías,
-// productos destacados (isFeatured=true vía useFeaturedProducts),
-// sección "Nosotros" y CTA de WhatsApp.
+// Home pública: hero, chips de categorías, productos destacados
+// (isFeatured=true vía useFeaturedProducts), sección "Nosotros", catálogo
+// completo con filtros y CTA de WhatsApp.
+// El orden respeta el preview visual estático: Hero → Categorías → Destacados
+// → Nosotros → Catálogo → CTA WhatsApp.
 
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -8,6 +10,7 @@ import { useFeaturedProducts } from '../hooks/useProducts'
 import { useCategories } from '../hooks/useCategories'
 import { useUiStore } from '../stores/uiStore'
 import ProductCard from '../components/ProductCard'
+import CatalogSection from '../components/CatalogSection'
 import Spinner from '../components/Spinner'
 
 const WHATSAPP_NUMBER: string = import.meta.env.VITE_WHATSAPP_NUMBER ?? '5491151225690'
@@ -180,6 +183,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Catálogo */}
+      <CatalogSection />
 
       {/* CTA WhatsApp */}
       <section className="relative py-20 overflow-hidden">

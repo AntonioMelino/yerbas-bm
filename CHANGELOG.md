@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Feature: home-catalog-section
+- Rama: `feature/home-categories-placement`
+- Qué se hizo: Se ajustó la Home para que respete fielmente la estructura del preview visual estático (`preview/index.html`): Hero → chips de categorías → Destacados → Nosotros → Catálogo completo → CTA WhatsApp. Se extrajo la sección de catálogo con filtros y búsqueda a un nuevo componente reutilizable `CatalogSection.tsx`, que se usa tanto en la Home (justo antes del CTA) como en `/productos` (manteniendo la sincronización con el query param `?categoria={slug}`). Los chips de categorías volvieron a su lugar original arriba de "Productos destacados", como ornamento de transición hacia los destacados.
+- Archivos principales afectados: `frontend/src/pages/HomePage.tsx`, `frontend/src/pages/ProductsPage.tsx`, `frontend/src/components/CatalogSection.tsx`
+- Autor: Kimi
+
 ## [2026-07-28] - Feature: admin-redesign
 - Rama: `feature/admin-redesign`
 - Qué se hizo: Se aplicó la identidad visual rústica oscura aprobada en el preview visual al panel de administración y su login, logrando coherencia estética con el sitio público. Se rediseñaron `LoginPage` (tarjeta centrada con logo BM, campos redondeados, botón lime/gold), `AdminLayout` (navbar oscuro con blur, navegación en chips y botón de salir estilizado), `ProductsAdminPage` (tabla con fondos forest/ink, badges lime/rojo y botones redondeados), `ProductFormPage` (formulario con etiquetas gold, inputs redondeados, caja de imagen destacada y vista previa) y `CategoriesAdminPage` (lista con bordes oliva, renombrado inline y botones alineados al diseño). Toda la funcionalidad previa se conserva: login JWT, CRUD de productos con multipart/form-data e imagen (validación cliente JPG/PNG/WebP, máx. 2 MB), CRUD de categorías con slug autogenerado por el backend, y redirección de rutas protegidas.
