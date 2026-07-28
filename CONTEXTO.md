@@ -381,10 +381,11 @@ fontFamily: {
 - **Servicio:** Supabase Storage
 - **Bucket:** `product-images`
 - **Flujo:**
-  1. Dueño sube imagen desde el panel admin.
-  2. Backend recibe el archivo, lo sube a Supabase Storage.
+  1. Dueño sube imagen desde el panel admin (`POST`/`PUT /api/products` con `multipart/form-data`, campo `Image`; obligatorio al crear, opcional al actualizar — si no se envía, se conserva la imagen actual).
+  2. Backend valida tamaño/formato, sube el archivo a Supabase Storage con un nombre único (GUID) y `Content-Type` explícito.
   3. Supabase devuelve URL pública.
   4. Backend guarda la URL en `products.image_url`.
+- **Validación del archivo (backend):** máximo 2 MB, formatos JPG/PNG/WebP. Se valida el `Content-Type` declarado y también los primeros bytes del archivo (magic bytes), para no confiar ciegamente en lo que manda el cliente. El frontend debería validar lo mismo antes de subir, para dar feedback inmediato al dueño.
 - **Límites:** Plan gratuito de Supabase incluye 1 GB de almacenamiento — suficiente para <30 productos.
 
 ---
@@ -409,6 +410,7 @@ fontFamily: {
 | 3   | Cambiar número de WhatsApp al real del negocio antes del lanzamiento | PENDIENTE                           |
 | 4   | Rate limiting / lockout en `POST /api/auth/login` (hoy sin throttling) | PENDIENTE (bajo riesgo, un solo admin) |
 | 5   | Timing side-channel en `AuthService.LoginAsync` (permite enumerar el username por latencia) | PENDIENTE (bajo riesgo, mismo motivo) |
+| 6   | Al borrar un producto o reemplazar su imagen, el archivo viejo no se borra de Supabase Storage (queda huérfano) | PENDIENTE (bajo riesgo, solo ocupa espacio del plan gratuito) |
 
 ---
 
