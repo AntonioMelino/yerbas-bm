@@ -2,7 +2,7 @@
 
 # Proyecto Fullstack: Catálogo + Carrito + Pedido por WhatsApp
 
-# Última actualización: 2026-07-26
+# Última actualización: 2026-07-28
 
 ---
 
@@ -85,25 +85,33 @@ YerbasBM.Infrastructure/
 ```
 src/
 ├── components/            # Componentes reutilizables
-│   ├── ui/               # Botones, inputs, cards (shadcn/ui style)
-│   ├── ProductCard.tsx
-│   ├── CartDrawer.tsx
-│   ├── ProductModal.tsx
-│   └── Navbar.tsx
+│   ├── Navbar.tsx         # Navbar público (fijo, oscuro con blur, logo BM, carrito)
+│   ├── Footer.tsx         # Footer público (marca, navegación, contacto)
+│   ├── ProductCard.tsx    # Tarjeta de producto — click abre ProductModal
+│   ├── ProductModal.tsx   # Modal de detalle con selector de cantidad
+│   ├── CartDrawer.tsx     # Drawer lateral del carrito + pedido por WhatsApp
+│   ├── Toast.tsx          # Notificación flotante (confirmaciones)
+│   ├── Spinner.tsx        # Indicador de carga
+│   ├── PublicLayout.tsx   # Marco de páginas públicas
+│   └── AdminLayout.tsx    # Marco del panel admin + guarda de sesión
 ├── pages/
-│   ├── HomePage.tsx
-│   ├── ProductsPage.tsx
+│   ├── HomePage.tsx       # Hero, categorías, destacados, nosotros, CTA WhatsApp
+│   ├── ProductsPage.tsx   # Catálogo con filtros y búsqueda
 │   └── admin/
-│       ├── LoginPage.tsx
-│       ├── DashboardPage.tsx
-│       ├── ProductsAdminPage.tsx
-│       └── NewProductPage.tsx
-├── hooks/                 # Custom hooks
-├── stores/                # Zustand stores (cartStore.ts)
-├── services/              # API calls (axios/fetch)
-├── types/                 # TypeScript interfaces
-└── App.tsx
+│       ├── LoginPage.tsx          # Login del admin
+│       ├── ProductsAdminPage.tsx  # Lista de productos con editar/eliminar
+│       ├── ProductFormPage.tsx    # Alta/edición de producto (multipart)
+│       └── CategoriesAdminPage.tsx# Gestión de categorías
+├── hooks/                 # TanStack Query hooks (useProducts, useCategories)
+├── stores/                # Zustand: cartStore, authStore, uiStore
+├── services/              # Cliente HTTP y servicios por recurso
+├── types/                 # TypeScript interfaces (DTOs del backend)
+├── utils/                 # Helpers (formatPrice, buildWhatsAppUrl)
+├── App.tsx                # Definición de rutas
+└── main.tsx               # Entry point + QueryClientProvider
 ```
+
+**Assets públicos:** imágenes estáticas del sitio (hero, sección nosotros, CTA) en `public/assets/`.
 
 ---
 
@@ -269,6 +277,7 @@ interface LoginDto {
 | **Verde dorado**   | `#958e43` | Hover states                       |
 | **Lima mate**      | `#bdb062` | Destacados, etiquetas              |
 | **Crema**          | `#ebd792` | Fondos claros, textos sobre oscuro |
+| **WhatsApp**       | `#25d366` | Botón de pedido por WhatsApp       |
 
 ### Tipografía
 
@@ -296,38 +305,42 @@ fontFamily: {
 
 #### Home (`/`)
 
-- **Hero:** Imagen grande de mates/yerba con el logo y slogan.
-- **Productos destacados:** Grid de productos marcados como `is_featured`.
-- **Categorías:** Visual de las categorías disponibles.
+- **Hero:** Pantalla completa con imagen de fondo rústica, gradientes oscuros, logo BM, slogan y botones a catálogo/WhatsApp.
+- **Categorías:** Chips que navegan al catálogo filtrado.
+- **Productos destacados:** Grid de productos marcados como `isFeatured`.
+- **Nosotros:** Imagen del mate imperial, historia de la marca y datos destacados (artesanal, envíos).
+- **CTA WhatsApp:** Franja con imagen de fondo y botón para abrir el carrito.
 
 #### Catálogo (`/productos`)
 
-- **Filtros arriba:** Tabs o chips por categoría.
-- **Grid de productos:** Tarjetas con imagen, nombre, precio.
-- **Búsqueda:** Campo de búsqueda por nombre.
+- **Filtros arriba:** Chips por categoría (sincronizados con `?categoria={slug}`).
+- **Búsqueda:** Campo de búsqueda por nombre en el cliente.
+- **Grid de productos:** Tarjetas con imagen, categoría, nombre, descripción, precio y badge de destacado.
 
 #### Modal de producto
 
-- Al hacer click en un producto, se abre un **modal** (no página aparte) con:
+- Al hacer click en una tarjeta se abre un **modal** (no página aparte) con:
   - Imagen grande
-  - Nombre, descripción, precio
-  - Selector de cantidad
+  - Categoría, nombre, descripción, precio
+  - Selector de cantidad (limitado al stock)
   - Botón "Agregar al carrito"
+- Al agregar, se cierra el modal y se abre el drawer del carrito (feedback inmediato).
 
 #### Carrito (Drawer lateral)
 
 - Se desliza desde la **derecha**.
-- Muestra lista de productos agregados con cantidad y subtotal.
-- Botón "Hacer pedido por WhatsApp" — **verde estilo WhatsApp prominente**.
-- Al hacer click, genera el mensaje y abre `https://wa.me/{numero}?text={mensaje}`.
+- Lista de ítems con imagen, cantidad (+/−), subtotal y quitar ítem.
+- Campo opcional para el nombre del cliente.
+- Total y botón "Hacer pedido por WhatsApp" (verde prominente).
+- Al hacer click, arma el mensaje y abre `https://wa.me/{numero}?text={mensaje}`.
 
 #### Panel Admin (protegido por login)
 
-- `/admin/login` — Login simple (usuario/contraseña).
-- `/admin/dashboard` — Resumen.
-- `/admin/productos` — Lista, editar, eliminar productos.
-- `/admin/productos/nuevo` — Formulario para crear producto con subida de imagen.
-- `/admin/categorias` — Gestión de categorías.
+- `/admin/login` — Login del dueño (usuario/contraseña, JWT en `localStorage`).
+- `/admin/productos` — Tabla de productos con editar y eliminar.
+- `/admin/productos/nuevo` — Formulario multipart para crear producto (imagen obligatoria).
+- `/admin/productos/:id/editar` — Edición de producto (imagen opcional).
+- `/admin/categorias` — Alta, renombrado inline y eliminación de categorías.
 
 ### Responsive
 
@@ -405,7 +418,7 @@ fontFamily: {
 
 | #   | Decisión                                                             | Estado                              |
 | --- | -------------------------------------------------------------------- | ----------------------------------- |
-| 1   | Imágenes del hero (¿usar foto propia o stock?)                       | PENDIENTE                           |
+| 1   | Imágenes del hero (¿usar foto propia o stock?)                       | Resuelto: se usan assets del preview visual (`public/assets/hero.jpg`, `canasta.jpg`, `mate-imperial.jpg`) hasta conseguir fotos propias. |
 | 2   | ¿El dueño necesita ver historial de pedidos?                         | PENDIENTE (por ahora solo WhatsApp) |
 | 3   | Cambiar número de WhatsApp al real del negocio antes del lanzamiento | PENDIENTE                           |
 | 4   | Rate limiting / lockout en `POST /api/auth/login` (hoy sin throttling) | PENDIENTE (bajo riesgo, un solo admin) |
