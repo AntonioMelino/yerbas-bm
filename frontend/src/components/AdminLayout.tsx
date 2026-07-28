@@ -1,6 +1,8 @@
 // Layout de las rutas /admin: actúa a la vez de guarda de sesión (redirige a
 // /admin/login si no hay JWT) y de marco visual del panel (barra superior con
 // navegación entre secciones, usuario logueado y botón de salir).
+// Estética alineada al sitio público: fondos oscuros, bordes oliva y acentos
+// lime/gold.
 
 import { Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
@@ -23,36 +25,39 @@ export default function AdminLayout() {
     navigate('/admin/login', { replace: true })
   }
 
-  return (
-    <div className="min-h-screen bg-yerba-950">
-      <header className="border-b border-yerba-700 bg-yerba-900">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <span className="font-display text-xl font-bold text-yerba-300">
-            Yerbas BM <span className="text-sm font-normal text-yerba-500">— Panel admin</span>
-          </span>
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    `relative px-1 py-1 text-sm transition-colors hover:text-lime ${
+      isActive ? 'font-semibold text-lime' : 'text-cream/80'
+    }`
 
-          <nav className="flex items-center gap-4 text-sm">
+  return (
+    <div className="min-h-screen bg-ink">
+      <header className="border-b border-olive/40 bg-night/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 sm:px-8 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border border-lime/60 bg-forest">
+              <span className="font-display font-bold text-lime">BM</span>
+            </div>
+            <div>
+              <span className="font-display text-lg font-bold text-cream">Yerbas BM</span>
+              <span className="ml-2 text-sm text-cream/50">Panel admin</span>
+            </div>
+          </div>
+
+          <nav className="flex items-center gap-6">
             {ADMIN_LINKS.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={({ isActive }) =>
-                  `transition-colors hover:text-yerba-400 ${
-                    isActive ? 'font-semibold text-yerba-400' : 'text-yerba-300'
-                  }`
-                }
-              >
+              <NavLink key={link.to} to={link.to} className={linkClass}>
                 {link.label}
               </NavLink>
             ))}
           </nav>
 
           <div className="flex items-center gap-3 text-sm">
-            {username && <span className="text-yerba-500">{username}</span>}
+            {username && <span className="text-cream/60">{username}</span>}
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-lg border border-yerba-700 px-3 py-1 text-yerba-300 transition-colors hover:bg-yerba-800"
+              className="rounded-full border border-olive/60 px-4 py-2 text-cream/80 transition hover:border-gold hover:text-lime"
             >
               Salir
             </button>
@@ -60,7 +65,7 @@ export default function AdminLayout() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main className="mx-auto max-w-7xl px-5 sm:px-8 py-8">
         <Outlet />
       </main>
     </div>

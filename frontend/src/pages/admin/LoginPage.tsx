@@ -1,6 +1,8 @@
 // Login del panel admin (/admin/login). Llama a POST /api/auth/login; si las
 // credenciales son válidas guarda el JWT en localStorage (vía authStore) y
 // redirige al listado de productos. Si ya hay sesión, redirige directo.
+// Diseño alineado a la identidad visual del sitio público: fondo oscuro,
+// tarjeta rústica con bordes oliva y acentos lime/gold.
 
 import { useState } from 'react'
 import type { FormEvent } from 'react'
@@ -39,49 +41,65 @@ export default function LoginPage() {
     }
   }
 
+  const inputClass =
+    'w-full rounded-full border border-olive/60 bg-ink/50 px-5 py-3 text-sm text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-yerba-950 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-ink px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-xl border border-yerba-700 bg-yerba-800 p-8 shadow-lg"
+        className="w-full max-w-sm rounded-3xl border border-olive/60 bg-night p-8 shadow-2xl"
       >
-        <h1 className="text-center font-display text-2xl font-bold text-yerba-300">
-          Yerbas BM
-        </h1>
-        <p className="mt-1 text-center text-sm text-yerba-500">Panel de administración</p>
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-lime/60 bg-forest">
+            <span className="font-display text-2xl font-bold text-lime">BM</span>
+          </div>
+          <h1 className="font-display text-2xl font-bold text-cream">Yerbas BM</h1>
+          <p className="mt-1 text-sm text-cream/50">Panel de administración</p>
+        </div>
 
-        <label className="mt-6 block text-sm text-yerba-400" htmlFor="username">
-          Usuario
-        </label>
-        <input
-          id="username"
-          type="text"
-          required
-          autoComplete="username"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-yerba-700 bg-yerba-900 px-3 py-2 text-yerba-300 focus:border-yerba-500 focus:outline-none"
-        />
+        <div className="space-y-4">
+          <div>
+            <label className="mb-1.5 block text-xs uppercase tracking-widest text-gold" htmlFor="username">
+              Usuario
+            </label>
+            <input
+              id="username"
+              type="text"
+              required
+              autoComplete="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              className={inputClass}
+            />
+          </div>
 
-        <label className="mt-4 block text-sm text-yerba-400" htmlFor="password">
-          Contraseña
-        </label>
-        <input
-          id="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-yerba-700 bg-yerba-900 px-3 py-2 text-yerba-300 focus:border-yerba-500 focus:outline-none"
-        />
+          <div>
+            <label className="mb-1.5 block text-xs uppercase tracking-widest text-gold" htmlFor="password">
+              Contraseña
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className={inputClass}
+            />
+          </div>
+        </div>
 
-        {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+        {error && (
+          <p className="mt-5 rounded-xl border border-red-900/60 bg-red-900/20 px-4 py-3 text-sm text-red-300">
+            {error}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={submitting}
-          className="mt-6 w-full rounded-lg bg-yerba-400 py-2 font-semibold text-yerba-950 transition-colors hover:bg-yerba-500 disabled:opacity-50"
+          className="mt-6 w-full rounded-full bg-lime py-3.5 font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
         >
           {submitting ? 'Ingresando…' : 'Ingresar'}
         </button>

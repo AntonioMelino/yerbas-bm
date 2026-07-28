@@ -7,8 +7,8 @@
 // - Al editar, es opcional: si no se adjunta una nueva, se conserva la actual.
 //
 // La imagen se valida en el cliente (tipo JPG/PNG/WebP, máx. 2 MB) para dar
-// feedback inmediato; el backend repite la misma validación (incluye magic
-// bytes) y su error también se muestra si igual se cuela algo inválido.
+// feedback inmediato; el backend repite la misma validación.
+// Diseño alineado a la identidad visual rústica oscura del sitio público.
 
 import { useEffect, useMemo, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
@@ -147,18 +147,23 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
     return <p className="text-red-400">No se pudo cargar el producto.</p>
   }
 
+  const labelClass = 'mb-1.5 block text-xs uppercase tracking-widest text-gold'
   const inputClass =
-    'mt-1 w-full rounded-lg border border-yerba-700 bg-yerba-900 px-3 py-2 text-yerba-300 focus:border-yerba-500 focus:outline-none'
+    'mt-1 w-full rounded-xl border border-olive/60 bg-ink/50 px-4 py-3 text-sm text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
+  const selectClass = `${inputClass} appearance-none`
 
   return (
     <div className="max-w-xl">
-      <h1 className="font-display text-2xl text-yerba-300">
-        {isEdit ? 'Editar producto' : 'Nuevo producto'}
+      <p className="text-xs uppercase tracking-widest text-gold">
+        {isEdit ? 'Editando artículo' : 'Nuevo artículo'}
+      </p>
+      <h1 className="font-display text-3xl font-bold text-cream">
+        {isEdit ? 'Editar producto' : 'Cargar producto'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-5">
         <div>
-          <label className="block text-sm text-yerba-400" htmlFor="name">
+          <label className={labelClass} htmlFor="name">
             Nombre *
           </label>
           <input
@@ -173,7 +178,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
         </div>
 
         <div>
-          <label className="block text-sm text-yerba-400" htmlFor="description">
+          <label className={labelClass} htmlFor="description">
             Descripción
           </label>
           <textarea
@@ -187,7 +192,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-yerba-400" htmlFor="price">
+            <label className={labelClass} htmlFor="price">
               Precio *
             </label>
             <input
@@ -202,7 +207,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
             />
           </div>
           <div>
-            <label className="block text-sm text-yerba-400" htmlFor="stock">
+            <label className={labelClass} htmlFor="stock">
               Stock *
             </label>
             <input
@@ -219,82 +224,86 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
         </div>
 
         <div>
-          <label className="block text-sm text-yerba-400" htmlFor="category">
+          <label className={labelClass} htmlFor="category">
             Categoría
           </label>
           <select
             id="category"
             value={categoryId}
             onChange={(event) => setCategoryId(event.target.value)}
-            className={inputClass}
+            className={selectClass}
           >
-            <option value="">Sin categoría</option>
+            <option value="" className="bg-night">Sin categoría</option>
             {(categories.data ?? []).map((category) => (
-              <option key={category.id} value={category.id}>
+              <option key={category.id} value={category.id} className="bg-night">
                 {category.name}
               </option>
             ))}
           </select>
         </div>
 
-        <div className="flex gap-6">
-          <label className="flex items-center gap-2 text-sm text-yerba-300">
+        <div className="flex flex-wrap gap-6">
+          <label className="flex items-center gap-2 text-sm text-cream">
             <input
               type="checkbox"
               checked={isFeatured}
               onChange={(event) => setIsFeatured(event.target.checked)}
-              className="h-4 w-4 accent-yerba-400"
+              className="h-4 w-4 accent-lime"
             />
             Destacado en la home
           </label>
           {isEdit && (
-            <label className="flex items-center gap-2 text-sm text-yerba-300">
+            <label className="flex items-center gap-2 text-sm text-cream">
               <input
                 type="checkbox"
                 checked={isActive}
                 onChange={(event) => setIsActive(event.target.checked)}
-                className="h-4 w-4 accent-yerba-400"
+                className="h-4 w-4 accent-lime"
               />
               Visible en el catálogo
             </label>
           )}
         </div>
 
-        <div>
-          <label className="block text-sm text-yerba-400" htmlFor="image">
+        <div className="rounded-2xl border border-olive/50 bg-forest/20 p-5">
+          <label className={labelClass} htmlFor="image">
             Imagen {isEdit ? '(opcional — se conserva la actual si no elegís otra)' : '*'}
           </label>
-          <p className="mt-0.5 text-xs text-yerba-600">JPG, PNG o WebP — máximo 2 MB.</p>
+          <p className="text-xs text-cream/50">JPG, PNG o WebP — máximo 2 MB.</p>
           <input
             id="image"
             type="file"
             accept="image/jpeg,image/png,image/webp"
             onChange={handleImageChange}
-            className="mt-2 w-full text-sm text-yerba-400 file:mr-3 file:rounded-lg file:border-0 file:bg-yerba-700 file:px-3 file:py-1.5 file:text-yerba-300 hover:file:bg-yerba-600"
+            className="mt-3 w-full text-sm text-cream/70 file:mr-3 file:rounded-full file:border-0 file:bg-olive file:px-4 file:py-2 file:text-cream hover:file:bg-gold"
           />
-          {imageError && <p className="mt-2 text-sm text-red-400">{imageError}</p>}
+          {imageError && <p className="mt-3 text-sm text-red-400">{imageError}</p>}
           {(previewUrl ?? (isEdit ? existing.data?.imageUrl : null)) && (
             <img
               src={previewUrl ?? existing.data?.imageUrl ?? ''}
               alt="Vista previa"
-              className="mt-3 h-32 w-32 rounded-lg border border-yerba-700 object-cover"
+              className="mt-4 h-36 w-36 rounded-xl border border-olive/50 object-cover"
             />
           )}
         </div>
 
-        {submitError && <p className="text-sm text-red-400">{submitError}</p>}
+        {submitError && (
+          <p className="rounded-xl border border-red-900/60 bg-red-900/20 px-4 py-3 text-sm text-red-300">
+            {submitError}
+          </p>
+        )}
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 pt-2">
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-lg bg-yerba-400 px-5 py-2 font-semibold text-yerba-950 transition-colors hover:bg-yerba-500 disabled:opacity-50"
+            className="rounded-full bg-lime px-6 py-2.5 font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
           >
             {submitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear producto'}
           </button>
           <Link
             to="/admin/productos"
-            className="rounded-lg border border-yerba-700 px-5 py-2 text-yerba-300 transition-colors hover:bg-yerba-800"
+            className="rounded-full border border-olive/60 px-6 py-2.5 text-cream transition hover:border-gold hover:text-lime"
           >
             Cancelar
           </Link>

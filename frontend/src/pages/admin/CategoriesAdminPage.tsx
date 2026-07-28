@@ -1,6 +1,7 @@
 // Gestión de categorías del admin (/admin/categorias): alta con el campo de
 // arriba y lista con renombrado inline y eliminación (con confirmación).
 // El slug nunca se toca acá: lo genera y regenera el backend a partir del nombre.
+// Diseño alineado a la identidad visual rústica oscura del sitio público.
 
 import { useState } from 'react'
 import type { FormEvent } from 'react'
@@ -62,14 +63,15 @@ export default function CategoriesAdminPage() {
   }
 
   const inputClass =
-    'rounded-lg border border-yerba-700 bg-yerba-900 px-3 py-2 text-yerba-300 focus:border-yerba-500 focus:outline-none'
+    'rounded-xl border border-olive/60 bg-ink/50 px-4 py-2.5 text-sm text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
 
   return (
     <div className="max-w-xl">
-      <h1 className="font-display text-2xl text-yerba-300">Categorías</h1>
+      <p className="text-xs uppercase tracking-widest text-gold">Clasificación</p>
+      <h1 className="font-display text-3xl font-bold text-cream">Categorías</h1>
 
       {/* Alta de categoría */}
-      <form onSubmit={handleCreate} className="mt-6 flex gap-2">
+      <form onSubmit={handleCreate} className="mt-6 flex gap-3">
         <input
           type="text"
           required
@@ -82,22 +84,26 @@ export default function CategoriesAdminPage() {
         <button
           type="submit"
           disabled={createCategory.isPending}
-          className="rounded-lg bg-yerba-400 px-4 py-2 text-sm font-semibold text-yerba-950 transition-colors hover:bg-yerba-500 disabled:opacity-50"
+          className="rounded-full bg-lime px-5 py-2 text-sm font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
         >
           Agregar
         </button>
       </form>
 
-      {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
+      {error && (
+        <p className="mt-4 rounded-xl border border-red-900/60 bg-red-900/20 px-4 py-3 text-sm text-red-300">
+          {error}
+        </p>
+      )}
 
       {categories.isPending ? (
         <Spinner label="Cargando categorías…" />
       ) : categories.isError ? (
         <p className="mt-6 text-red-400">No se pudieron cargar las categorías.</p>
       ) : categories.data.length === 0 ? (
-        <p className="mt-6 text-yerba-500">Todavía no hay categorías.</p>
+        <p className="mt-6 text-cream/50">Todavía no hay categorías.</p>
       ) : (
-        <ul className="mt-6 divide-y divide-yerba-700 rounded-xl border border-yerba-700">
+        <ul className="mt-6 divide-y divide-olive/40 rounded-2xl border border-olive/50 bg-forest/20">
           {categories.data.map((category) => (
             <li
               key={category.id}
@@ -112,20 +118,20 @@ export default function CategoriesAdminPage() {
                     maxLength={100}
                     value={editingName}
                     onChange={(event) => setEditingName(event.target.value)}
-                    className={`${inputClass} flex-1 py-1 text-sm`}
+                    className={`${inputClass} flex-1 py-1.5 text-sm`}
                     autoFocus
                   />
                   <button
                     type="submit"
                     disabled={updateCategory.isPending}
-                    className="rounded-lg bg-yerba-400 px-3 py-1 text-sm font-semibold text-yerba-950 hover:bg-yerba-500 disabled:opacity-50"
+                    className="rounded-full bg-lime px-3 py-1.5 text-sm font-bold text-ink hover:bg-gold hover:text-cream disabled:opacity-50"
                   >
                     Guardar
                   </button>
                   <button
                     type="button"
                     onClick={() => setEditingId(null)}
-                    className="rounded-lg border border-yerba-700 px-3 py-1 text-sm text-yerba-300 hover:bg-yerba-800"
+                    className="rounded-full border border-olive/60 px-3 py-1.5 text-sm text-cream transition hover:border-gold hover:text-lime"
                   >
                     Cancelar
                   </button>
@@ -133,8 +139,8 @@ export default function CategoriesAdminPage() {
               ) : (
                 <>
                   <div>
-                    <span className="text-yerba-300">{category.name}</span>
-                    <span className="ml-2 text-xs text-yerba-600">/{category.slug}</span>
+                    <span className="text-cream">{category.name}</span>
+                    <span className="ml-2 text-xs text-cream/40">/{category.slug}</span>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -143,7 +149,7 @@ export default function CategoriesAdminPage() {
                         setEditingId(category.id)
                         setEditingName(category.name)
                       }}
-                      className="rounded-lg border border-yerba-700 px-3 py-1 text-sm text-yerba-300 transition-colors hover:bg-yerba-800"
+                      className="rounded-full border border-olive/60 px-3 py-1.5 text-sm text-cream transition hover:border-gold hover:text-lime"
                     >
                       Renombrar
                     </button>
@@ -151,7 +157,7 @@ export default function CategoriesAdminPage() {
                       type="button"
                       onClick={() => handleDelete(category.id, category.name)}
                       disabled={deleteCategory.isPending}
-                      className="rounded-lg border border-red-900 px-3 py-1 text-sm text-red-400 transition-colors hover:bg-red-900/40 disabled:opacity-50"
+                      className="rounded-full border border-red-900/60 px-3 py-1.5 text-sm text-red-300 transition hover:bg-red-900/30 disabled:opacity-50"
                     >
                       Eliminar
                     </button>

@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Feature: admin-redesign
+- Rama: `feature/admin-redesign`
+- Qué se hizo: Se aplicó la identidad visual rústica oscura aprobada en el preview visual al panel de administración y su login, logrando coherencia estética con el sitio público. Se rediseñaron `LoginPage` (tarjeta centrada con logo BM, campos redondeados, botón lime/gold), `AdminLayout` (navbar oscuro con blur, navegación en chips y botón de salir estilizado), `ProductsAdminPage` (tabla con fondos forest/ink, badges lime/rojo y botones redondeados), `ProductFormPage` (formulario con etiquetas gold, inputs redondeados, caja de imagen destacada y vista previa) y `CategoriesAdminPage` (lista con bordes oliva, renombrado inline y botones alineados al diseño). Toda la funcionalidad previa se conserva: login JWT, CRUD de productos con multipart/form-data e imagen (validación cliente JPG/PNG/WebP, máx. 2 MB), CRUD de categorías con slug autogenerado por el backend, y redirección de rutas protegidas.
+- Archivos principales afectados: `frontend/src/components/AdminLayout.tsx`, `frontend/src/pages/admin/{LoginPage,ProductsAdminPage,ProductFormPage,CategoriesAdminPage}.tsx`
+- Autor: Kimi
+
 ## [2026-07-28] - Feature: redesign-public-ui-v2
 - Rama: `feature/redesign-public-ui-v2`
 - Qué se hizo: Se aplicó la dirección estética aprobada del preview visual estático (`preview/index.html`) a todo el sitio público. Se reemplazó la paleta anterior por la oficial del preview (`ink`, `night`, `forest`, `olive`, `yerba`, `gold`, `lime`, `cream`, `wa`) y las tipografías por `Cinzel Decorative` (display) + `Inter` (cuerpo). Se reescribieron `Navbar`, `Footer`, `ProductCard`, `ProductModal`, `CartDrawer`, `HomePage` y `ProductsPage` con la estética rústica oscura: hero con imagen de fondo y degradados, sección de categorías, destacados, “Nosotros”, catálogo con chips de filtro y búsqueda, drawer de carrito con pedido por WhatsApp y modal de producto. Se agregó `Toast.tsx` y se extendió `uiStore` con `toast`/`showToast` para confirmar acciones (por ejemplo, “Agregado al carrito 🧉”). Los assets visuales del preview se movieron a `public/assets/`. La carpeta temporal `preview/` se agregó a `.gitignore` para que no se commitee.
