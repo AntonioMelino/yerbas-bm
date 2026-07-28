@@ -42,36 +42,36 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         {product.categoryName && (
-          <span className="absolute top-3 left-3 bg-ink/70 backdrop-blur border border-olive/50 text-lime text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full">
+          <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-ink/70 backdrop-blur border border-olive/50 text-lime text-[9px] sm:text-[10px] uppercase tracking-widest px-2 py-1 sm:px-3 sm:py-1.5 rounded-full">
             {product.categoryName}
           </span>
         )}
         {product.isFeatured && (
-          <span className="absolute top-3 right-3 bg-lime text-ink text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full">
+          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-lime text-ink text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-1 sm:px-3 sm:py-1.5 rounded-full">
             Destacado
           </span>
         )}
       </div>
 
-      <div className="p-5">
-        <h3 className="font-display font-bold text-base leading-snug mb-1.5 text-cream group-hover:text-lime transition">
+      <div className="p-3 sm:p-5">
+        <h3 className="font-display font-bold text-sm sm:text-base leading-snug mb-1 text-cream group-hover:text-lime transition line-clamp-2">
           {product.name}
         </h3>
-        <p className="text-xs text-cream/50 font-light line-clamp-2 mb-4">
+        <p className="hidden sm:block text-xs text-cream/50 font-light line-clamp-2 mb-4">
           {product.description ?? ''}
         </p>
-        <div className="flex items-center justify-between">
-          <span className="font-display font-bold text-xl text-lime">
+        <div className="flex items-center justify-between mt-2 sm:mt-0">
+          <span className="font-display font-bold text-lg sm:text-xl text-lime">
             {formatPrice(product.price)}
           </span>
           <button
             type="button"
             onClick={handleAdd}
-            className="w-10 h-10 rounded-full bg-yerba hover:bg-lime hover:text-ink border border-olive/50 flex items-center justify-center transition-all duration-300"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-yerba hover:bg-lime hover:text-ink border border-olive/50 flex items-center justify-center transition-all duration-300"
             aria-label={`Agregar ${product.name} al carrito`}
           >
             <svg
-              className="w-5 h-5"
+              className="w-4 h-4 sm:w-5 sm:h-5"
               fill="none"
               stroke="currentColor"
               strokeWidth={2}

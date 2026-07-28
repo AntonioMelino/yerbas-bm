@@ -33,15 +33,15 @@ export default function Navbar() {
           : ''
       }`}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8 py-4">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-5 md:px-8 py-3 sm:py-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-full border border-lime/60 bg-night/80 flex items-center justify-center shadow-lg group-hover:border-gold transition">
-            <span className="font-display font-bold text-lime text-lg leading-none">BM</span>
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-lime/60 bg-night/80 flex items-center justify-center shadow-lg group-hover:border-gold transition">
+            <span className="font-display font-bold text-lime text-base sm:text-lg leading-none">BM</span>
           </div>
           <div className="leading-tight">
-            <p className="font-display font-bold tracking-wide text-cream text-lg">Yerbas BM</p>
-            <p className="text-[10px] uppercase eyebrow text-lime/80">Tradición matera</p>
+            <p className="font-display font-bold tracking-wide text-cream text-base sm:text-lg">Yerbas BM</p>
+            <p className="text-[9px] sm:text-[10px] uppercase eyebrow text-lime/80">Tradición matera</p>
           </div>
         </Link>
 
@@ -77,7 +77,7 @@ export default function Navbar() {
             onClick={openCart}
             title="Carrito"
             aria-label="Abrir carrito"
-            className="relative flex items-center gap-2 bg-forest hover:bg-yerba border border-olive/60 hover:border-gold rounded-full pl-4 pr-5 py-2.5 text-sm font-medium transition-all duration-300"
+            className="relative flex items-center gap-2 bg-forest hover:bg-yerba border border-olive/60 hover:border-gold rounded-full pl-3 pr-3 sm:pl-4 sm:pr-5 py-2 sm:py-2.5 text-sm font-medium transition-all duration-300"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@ export default function Navbar() {
             </svg>
             <span className="hidden sm:inline">Carrito</span>
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-lime text-ink text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-1.5 bg-lime text-ink text-[10px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center">
                 {totalItems}
               </span>
             )}
@@ -104,7 +104,7 @@ export default function Navbar() {
           {/* Botón hamburguesa (mobile) */}
           <button
             type="button"
-            className="flex md:hidden w-10 h-10 rounded-full border border-olive/60 items-center justify-center text-cream hover:border-gold hover:text-lime transition"
+            className="flex md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-olive/60 items-center justify-center text-cream hover:border-gold hover:text-lime transition"
             aria-label="Abrir menú"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((open) => !open)}
@@ -123,16 +123,16 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Menú desplegable mobile */}
+      {/* Menú desplegable mobile (pantalla completa) */}
       {menuOpen && (
-        <div className="border-t border-olive/40 bg-night/95 backdrop-blur-md px-5 sm:px-8 py-4 md:hidden">
-          <div className="flex flex-col gap-4 text-sm text-cream/80">
+        <div className="fixed inset-0 top-[60px] z-40 bg-ink/95 backdrop-blur-lg px-5 py-8 md:hidden">
+          <div className="flex flex-col items-center gap-6 text-lg text-cream/90">
             {NAV_LINKS.map((link) =>
               link.isAnchor ? (
                 <a
                   key={link.to}
                   href={link.to}
-                  className="hover:text-lime transition"
+                  className="hover:text-lime transition font-display text-2xl"
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}
@@ -142,7 +142,7 @@ export default function Navbar() {
                   key={link.to}
                   to={link.to}
                   className={({ isActive }) =>
-                    `transition ${isActive ? 'text-lime' : 'hover:text-lime'}`
+                    `transition font-display text-2xl ${isActive ? 'text-lime' : 'hover:text-lime'}`
                   }
                   onClick={() => setMenuOpen(false)}
                 >

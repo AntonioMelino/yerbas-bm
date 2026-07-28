@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Feature: mobile-polish
+- Rama: `feature/mobile-polish`
+- Qué se hizo: Pulido visual y de usabilidad exclusivo para vista mobile. En `ProductCard.tsx` se redujeron paddings, tamaños de fuente, badges y botón de agregar para que la card sea más compacta y legible en pantallas chicas; la descripción se oculta en mobile. En `CatalogSection.tsx` se redujeron chips y búsqueda, se ajustó el título y el grid pasa a 2 columnas en mobile. En `HomePage.tsx` se redujeron paddings y tamaños de tipografía en Hero, Destacados, Nosotros y CTA; el grid de destacados también es de 2 columnas en mobile. En `Navbar.tsx` se achicaron logo/botones, se compactó el badge del carrito y el menú mobile ahora es pantalla completa con links grandes y tipografía display.
+- Archivos principales afectados: `frontend/src/components/{ProductCard,CatalogSection,Navbar}.tsx`, `frontend/src/pages/HomePage.tsx`
+- Autor: Kimi
+
 ## [2026-07-28] - Fix: home-categories-placement
 - Rama: `feature/mobile-home-categories-fix`
 - Qué se hizo: Se ocultó la sección de chips de categorías que aparecía arriba de "Productos destacados" tanto en mobile como en desktop. El catálogo completo (con sus propios filtros de categoría) sigue estando más abajo en la Home, justo antes del CTA de WhatsApp, que es donde el usuario puede explorar por categoría.
