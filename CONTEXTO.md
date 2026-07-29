@@ -2,7 +2,7 @@
 
 # Proyecto Fullstack: Catálogo + Carrito + Pedido por WhatsApp
 
-# Última actualización: 2026-07-28
+# Última actualización: 2026-07-29
 
 ---
 
@@ -340,10 +340,11 @@ fontFamily: {
 #### Panel Admin (protegido por login)
 
 - `/admin/login` — Login del dueño (usuario/contraseña, JWT en `localStorage`).
-- `/admin/productos` — Tabla de productos con editar y eliminar.
+- `/admin/productos` — Tabla de productos con editar y eliminar; en mobile se muestra como tarjetas apiladas para evitar scroll horizontal.
 - `/admin/productos/nuevo` — Formulario multipart para crear producto (imagen obligatoria).
 - `/admin/productos/:id/editar` — Edición de producto (imagen opcional).
 - `/admin/categorias` — Alta, renombrado inline y eliminación de categorías.
+- **Responsive:** el panel admin usa menú hamburguesa en mobile, formularios apilados y botones táctiles; el dueño puede cargar y editar productos desde su celular.
 
 ### Responsive
 
