@@ -137,29 +137,33 @@ export default function ProductsAdminPage() {
             {products.data.map((product) => (
               <div
                 key={product.id}
-                className="rounded-2xl border border-olive/50 bg-forest/20 p-4"
+                className="min-w-0 rounded-2xl border border-olive/50 bg-forest/20 p-4"
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3 overflow-hidden">
                   {product.imageUrl ? (
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="h-16 w-16 shrink-0 rounded-xl object-cover border border-olive/40"
+                      className="h-14 w-14 shrink-0 rounded-xl object-cover border border-olive/40"
                     />
                   ) : (
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-olive/40 bg-night text-xs text-cream/30">
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-olive/40 bg-night text-xs text-cream/30">
                       —
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="font-display text-base font-bold text-cream truncate">
+                    <p className="truncate font-display text-base font-bold text-cream">
                       {product.name}
                     </p>
-                    <p className="text-sm text-cream/60">{product.categoryName ?? 'Sin categoría'}</p>
+                    <p className="truncate text-sm text-cream/60">
+                      {product.categoryName ?? 'Sin categoría'}
+                    </p>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       <span className="text-sm text-cream">{formatPrice(product.price)}</span>
                       <span className="text-xs text-cream/50">•</span>
                       <span className="text-sm text-cream/80">Stock {product.stock}</span>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
                       <span
                         className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                           product.isActive
@@ -180,7 +184,7 @@ export default function ProductsAdminPage() {
                 <div className="mt-4 flex gap-2">
                   <Link
                     to={`/admin/productos/${product.id}/editar`}
-                    className="flex-1 rounded-full border border-olive/60 px-4 py-2 text-center text-sm text-cream transition hover:border-gold hover:text-lime"
+                    className="flex-1 rounded-full border border-olive/60 px-4 py-2.5 text-center text-sm text-cream transition hover:border-gold hover:text-lime"
                   >
                     Editar
                   </Link>
@@ -188,7 +192,7 @@ export default function ProductsAdminPage() {
                     type="button"
                     onClick={() => handleDelete(product.id, product.name)}
                     disabled={deleteProduct.isPending}
-                    className="flex-1 rounded-full border border-red-900/60 px-4 py-2 text-sm text-red-300 transition hover:bg-red-900/30 disabled:opacity-50"
+                    className="flex-1 rounded-full border border-red-900/60 px-4 py-2.5 text-sm text-red-300 transition hover:bg-red-900/30 disabled:opacity-50"
                   >
                     Eliminar
                   </button>

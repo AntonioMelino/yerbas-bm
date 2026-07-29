@@ -115,7 +115,7 @@ export default function AdminLayout() {
         )}
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-8 py-6 sm:py-8">
+      <main className="mx-auto min-w-0 max-w-7xl px-4 sm:px-8 py-6 sm:py-8">
         <Outlet />
       </main>
     </div>
