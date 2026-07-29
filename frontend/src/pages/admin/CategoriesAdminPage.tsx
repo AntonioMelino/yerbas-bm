@@ -63,15 +63,15 @@ export default function CategoriesAdminPage() {
   }
 
   const inputClass =
-    'rounded-xl border border-olive/60 bg-ink/50 px-4 py-2.5 text-sm text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
+    'rounded-xl border border-olive/60 bg-ink/50 px-4 py-3 text-base text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
 
   return (
     <div className="max-w-xl">
       <p className="text-xs uppercase tracking-widest text-gold">Clasificación</p>
-      <h1 className="font-display text-3xl font-bold text-cream">Categorías</h1>
+      <h1 className="font-display text-2xl sm:text-3xl font-bold text-cream">Categorías</h1>
 
       {/* Alta de categoría */}
-      <form onSubmit={handleCreate} className="mt-6 flex gap-3">
+      <form onSubmit={handleCreate} className="mt-6 flex flex-col gap-3 sm:flex-row">
         <input
           type="text"
           required
@@ -84,7 +84,7 @@ export default function CategoriesAdminPage() {
         <button
           type="submit"
           disabled={createCategory.isPending}
-          className="rounded-full bg-lime px-5 py-2 text-sm font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
+          className="rounded-full bg-lime px-5 py-3 text-sm font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50 sm:py-2"
         >
           Agregar
         </button>
@@ -107,40 +107,42 @@ export default function CategoriesAdminPage() {
           {categories.data.map((category) => (
             <li
               key={category.id}
-              className="flex items-center justify-between gap-3 px-4 py-3"
+              className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
               {editingId === category.id ? (
                 /* Renombrado inline */
-                <form onSubmit={handleUpdate} className="flex flex-1 gap-2">
+                <form onSubmit={handleUpdate} className="flex flex-col flex-1 gap-2 sm:flex-row">
                   <input
                     type="text"
                     required
                     maxLength={100}
                     value={editingName}
                     onChange={(event) => setEditingName(event.target.value)}
-                    className={`${inputClass} flex-1 py-1.5 text-sm`}
+                    className={`${inputClass} flex-1 py-2 text-sm sm:py-1.5`}
                     autoFocus
                   />
-                  <button
-                    type="submit"
-                    disabled={updateCategory.isPending}
-                    className="rounded-full bg-lime px-3 py-1.5 text-sm font-bold text-ink hover:bg-gold hover:text-cream disabled:opacity-50"
-                  >
-                    Guardar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditingId(null)}
-                    className="rounded-full border border-olive/60 px-3 py-1.5 text-sm text-cream transition hover:border-gold hover:text-lime"
-                  >
-                    Cancelar
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      type="submit"
+                      disabled={updateCategory.isPending}
+                      className="flex-1 rounded-full bg-lime px-3 py-2 text-sm font-bold text-ink hover:bg-gold hover:text-cream disabled:opacity-50 sm:flex-none"
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditingId(null)}
+                      className="flex-1 rounded-full border border-olive/60 px-3 py-2 text-sm text-cream transition hover:border-gold hover:text-lime sm:flex-none"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </form>
               ) : (
                 <>
-                  <div>
-                    <span className="text-cream">{category.name}</span>
-                    <span className="ml-2 text-xs text-cream/40">/{category.slug}</span>
+                  <div className="min-w-0">
+                    <span className="block truncate text-cream">{category.name}</span>
+                    <span className="text-xs text-cream/40">/{category.slug}</span>
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -149,7 +151,7 @@ export default function CategoriesAdminPage() {
                         setEditingId(category.id)
                         setEditingName(category.name)
                       }}
-                      className="rounded-full border border-olive/60 px-3 py-1.5 text-sm text-cream transition hover:border-gold hover:text-lime"
+                      className="flex-1 rounded-full border border-olive/60 px-4 py-2 text-sm text-cream transition hover:border-gold hover:text-lime sm:flex-none sm:px-3 sm:py-1.5"
                     >
                       Renombrar
                     </button>
@@ -157,7 +159,7 @@ export default function CategoriesAdminPage() {
                       type="button"
                       onClick={() => handleDelete(category.id, category.name)}
                       disabled={deleteCategory.isPending}
-                      className="rounded-full border border-red-900/60 px-3 py-1.5 text-sm text-red-300 transition hover:bg-red-900/30 disabled:opacity-50"
+                      className="flex-1 rounded-full border border-red-900/60 px-4 py-2 text-sm text-red-300 transition hover:bg-red-900/30 disabled:opacity-50 sm:flex-none sm:px-3 sm:py-1.5"
                     >
                       Eliminar
                     </button>
