@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Fix: backend-railway-port-binding
+- Rama: `feature/backend-railway-port`
+- Qué se hizo: Con el Dockerfile ya funcionando, el contenedor arrancaba pero escuchaba en el puerto 80 por defecto en vez del puerto que Railway le asigna dinámicamente (variable `PORT`), porque la variable `ASPNETCORE_URLS=http://0.0.0.0:${{PORT}}` configurada a mano en Railway no se interpolaba y quedaba con el puerto vacío (`http://0.0.0.0:`, log: "Overriding HTTP_PORTS '8080'... Binding to values defined by URLS... Now listening on: http://[::]:80"). Se agregó en `Program.cs` una lectura directa de la variable de entorno `PORT` al arrancar (`builder.WebHost.UseUrls(...)` si está presente), que bindea Kestrel al puerto real inyectado por Railway en runtime, sin depender de que la interpolación de variables de Railway funcione. Verificado en local con `PORT=4321`: Kestrel loguea `Now listening on: http://0.0.0.0:4321`.
+- Archivos principales afectados: `backend/YerbasBM.API/Program.cs`
+- Autor: Claude
+
 ## [2026-07-28] - Fix: backend-dockerfile-railway
 - Rama: `feature/backend-dockerfile`
 - Qué se hizo: El primer intento de deploy en Railway falló porque Railpack (su builder) no reconoce `YerbasBM.slnx` (formato de solución `.slnx`, más nuevo que el `.sln` clásico) y no lograba detectar que el proyecto es .NET (`Railpack could not determine how to build the app`). Se agregó `backend/Dockerfile` (multi-stage: SDK 8.0 para restore/publish, runtime `aspnet:8.0` para la imagen final, apuntando explícitamente a `YerbasBM.API.csproj`) y `backend/.dockerignore`. Un `Dockerfile` en el Root Directory tiene prioridad sobre la auto-detección de Railway, así que evita el problema sin tocar `YerbasBM.slnx` ni la forma de compilar en desarrollo local.

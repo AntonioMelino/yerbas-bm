@@ -11,6 +11,18 @@ using YerbasBM.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Railway (y otros PaaS similares) asignan el puerto del contenedor en runtime vía
+// la variable de entorno PORT, no vía ASPNETCORE_URLS. Si está presente, bindeamos
+// Kestrel explícitamente a ese puerto en vez de depender de que alguien arme
+// ASPNETCORE_URLS a mano (la interpolación de variables de Railway en texto libre
+// puede no resolverse, dejando el puerto vacío y cayendo al 80 por defecto, que no
+// es el puerto al que Railway realmente le manda el tráfico).
+var railwayPort = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(railwayPort))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{railwayPort}");
+}
+
 // Add services to the container.
 
 builder.Services.AddControllers();
