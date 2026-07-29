@@ -42,19 +42,19 @@ export default function LoginPage() {
   }
 
   const inputClass =
-    'w-full rounded-full border border-olive/60 bg-ink/50 px-5 py-3 text-sm text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
+    'w-full rounded-full border border-olive/60 bg-ink/50 px-5 py-4 text-base text-cream placeholder:text-cream/40 focus:border-gold focus:outline-none transition'
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink px-4">
+    <div className="flex min-h-screen items-center justify-center bg-ink px-4 py-8">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm rounded-3xl border border-olive/60 bg-night p-8 shadow-2xl"
+        className="w-full max-w-sm rounded-3xl border border-olive/60 bg-night p-6 sm:p-8 shadow-2xl"
       >
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-lime/60 bg-forest">
-            <span className="font-display text-2xl font-bold text-lime">BM</span>
+          <div className="mx-auto mb-4 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full border border-lime/60 bg-forest">
+            <span className="font-display text-xl sm:text-2xl font-bold text-lime">BM</span>
           </div>
-          <h1 className="font-display text-2xl font-bold text-cream">Yerbas BM</h1>
+          <h1 className="font-display text-xl sm:text-2xl font-bold text-cream">Yerbas BM</h1>
           <p className="mt-1 text-sm text-cream/50">Panel de administración</p>
         </div>
 
@@ -99,7 +99,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-6 w-full rounded-full bg-lime py-3.5 font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
+          className="mt-6 w-full rounded-full bg-lime py-4 text-base font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
         >
           {submitting ? 'Ingresando…' : 'Ingresar'}
         </button>

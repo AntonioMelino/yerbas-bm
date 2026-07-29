@@ -157,7 +157,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
       <p className="text-xs uppercase tracking-widest text-gold">
         {isEdit ? 'Editando artículo' : 'Nuevo artículo'}
       </p>
-      <h1 className="font-display text-3xl font-bold text-cream">
+      <h1 className="font-display text-2xl sm:text-3xl font-bold text-cream">
         {isEdit ? 'Editar producto' : 'Cargar producto'}
       </h1>
 
@@ -190,7 +190,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className={labelClass} htmlFor="price">
               Precio *
@@ -242,7 +242,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
           </select>
         </div>
 
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-6">
           <label className="flex items-center gap-2 text-sm text-cream">
             <input
               type="checkbox"
@@ -265,7 +265,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
           )}
         </div>
 
-        <div className="rounded-2xl border border-olive/50 bg-forest/20 p-5">
+        <div className="rounded-2xl border border-olive/50 bg-forest/20 p-4 sm:p-5">
           <label className={labelClass} htmlFor="image">
             Imagen {isEdit ? '(opcional — se conserva la actual si no elegís otra)' : '*'}
           </label>
@@ -282,7 +282,7 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
             <img
               src={previewUrl ?? existing.data?.imageUrl ?? ''}
               alt="Vista previa"
-              className="mt-4 h-36 w-36 rounded-xl border border-olive/50 object-cover"
+              className="mt-4 h-36 w-full rounded-xl border border-olive/50 object-cover sm:w-36"
             />
           )}
         </div>
@@ -293,17 +293,17 @@ export default function ProductFormPage({ mode }: ProductFormPageProps) {
           </p>
         )}
 
-        <div className="flex gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row">
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-full bg-lime px-6 py-2.5 font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50"
+            className="w-full rounded-full bg-lime px-6 py-3 text-center font-bold text-ink transition hover:bg-gold hover:text-cream disabled:opacity-50 sm:w-auto sm:py-2.5"
           >
             {submitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear producto'}
           </button>
           <Link
             to="/admin/productos"
-            className="rounded-full border border-olive/60 px-6 py-2.5 text-cream transition hover:border-gold hover:text-lime"
+            className="w-full rounded-full border border-olive/60 px-6 py-3 text-center text-cream transition hover:border-gold hover:text-lime sm:w-auto sm:py-2.5"
           >
             Cancelar
           </Link>
