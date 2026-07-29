@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Feature: frontend-vercel-config
+- Rama: `feature/frontend-vercel-config`
+- Qué se hizo: Se agregó `frontend/vercel.json` con un rewrite (`/(.*)` → `/index.html`) requerido para deployar en Vercel. El frontend usa `createBrowserRouter` (rutas reales, no hash) para rutas como `/productos` o `/admin/productos`; sin este rewrite, Vercel devuelve 404 al entrar directo o recargar cualquier ruta que no sea la home, porque intenta resolverla como un archivo estático en vez de dejar que React Router la maneje del lado del cliente. Se verificó que `npm run build` sigue en verde.
+- Archivos principales afectados: `frontend/vercel.json`
+- Autor: Claude
+
 ## [2026-07-28] - Fix: backend-supabase-pooler-docs
 - Rama: `fix/backend-supabase-pooler-docs`
 - Qué se hizo: Con el puerto ya bindeado correctamente, `/api/categories` en Railway fallaba con `Npgsql.NpgsqlException: Failed to connect to [IPv6...]:5432 - Network is unreachable`. La connection string apuntaba a la conexión directa de Supabase (`db.xxxx.supabase.co`), que resuelve solo por IPv6, y Railway no tiene salida IPv6. Se cambió `ConnectionStrings__DefaultConnection` en Railway al **connection pooler** de Supabase (host `aws-0-sa-east-1.pooler.supabase.com`, usuario `postgres.<project-ref>`, IPv4), y se documentó en `backend/README.md` para no repetir el mismo diagnóstico en futuros deploys. Verificado en producción: `/api/categories` devuelve las categorías reales.
