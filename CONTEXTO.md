@@ -16,6 +16,9 @@
 **Repositorio GitHub:** `yerbas-bm`  
 **Carpeta raíz:** `yerbas-bm/`
 
+**Backend en producción (Railway):** `https://yerbas-bm-production.up.railway.app`  
+**Frontend en producción (Vercel):** `https://yerbas-bm.vercel.app`
+
 ---
 
 ## 2. OBJETIVO DEL PROYECTO

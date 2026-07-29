@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Verificación: deploy completo en producción
+- Rama: `docs/production-deploy-verified`
+- Qué se hizo: Primer deploy completo del proyecto — backend en Railway (`https://yerbas-bm-production.up.railway.app`) y frontend en Vercel (`https://yerbas-bm.vercel.app`), conectados entre sí. Se probó manualmente contra producción: catálogo con filtro por categoría y búsqueda, modal de producto, carrito (agregar/modificar/quitar), pedido por WhatsApp, recarga directa de `/productos` (confirma que el rewrite de `vercel.json` funciona), login de admin, alta de producto con imagen (sube a Supabase Storage desde Railway), edición sin cambiar imagen, alta/edición de categoría, logout con redirección, y vista mobile. Todo funcionó correctamente. Quedaron resueltos en el camino tres problemas específicos de esta combinación de infraestructura (Railway + Supabase + Vercel), documentados en las entradas anteriores de este changelog: Railpack no reconocía `YerbasBM.slnx` (fix: Dockerfile explícito), Kestrel no bindeaba al puerto real de Railway (fix: leer `PORT` del entorno), y la conexión directa de Supabase resuelve por IPv6 que Railway no soporta (fix: usar el connection pooler).
+- Archivos principales afectados: `CONTEXTO.md` (URLs de producción, sección 1)
+- Autor: Claude
+
 ## [2026-07-28] - Feature: frontend-vercel-config
 - Rama: `feature/frontend-vercel-config`
 - Qué se hizo: Se agregó `frontend/vercel.json` con un rewrite (`/(.*)` → `/index.html`) requerido para deployar en Vercel. El frontend usa `createBrowserRouter` (rutas reales, no hash) para rutas como `/productos` o `/admin/productos`; sin este rewrite, Vercel devuelve 404 al entrar directo o recargar cualquier ruta que no sea la home, porque intenta resolverla como un archivo estático en vez de dejar que React Router la maneje del lado del cliente. Se verificó que `npm run build` sigue en verde.
