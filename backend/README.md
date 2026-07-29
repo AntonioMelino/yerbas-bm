@@ -81,6 +81,7 @@ Después de confirmar que el login funciona, se recomienda borrar esas dos entra
 | `Jwt__Issuer`, `Jwt__Audience`, `Jwt__ExpirationMinutes` | Autenticación admin (JWT) | Issuer/audience del token y minutos de validez (default 480 = 8hs). Tienen valores por defecto en `appsettings.json`. |
 | `Seed__AdminUsername`, `Seed__AdminPassword`       | Bootstrap del admin           | Credenciales del único admin, usadas solo una vez si `admin_users` está vacía (ver "Crear el primer admin"). |
 | `Supabase__Url`, `Supabase__ServiceKey`             | Subida de imágenes (a implementar) | Acceso a Supabase Storage para las imágenes de productos.                                   |
+| `Cors__AllowedOrigins__0`, `Cors__AllowedOrigins__1`, ... | CORS (frontend en otro dominio) | Orígenes autorizados a llamar a la API desde el navegador (ej. la URL de Vercel en producción). Sin ninguno configurado, la policy no habilita ningún origen (fail-closed) y se loguea un warning al arrancar. En desarrollo, `appsettings.Development.json` ya trae `http://localhost:5173` (dev server de Vite). |
 
 `__` (doble guion bajo) es el separador que usa .NET para mapear variables de entorno a secciones anidadas de `appsettings.json` (ej. `ConnectionStrings__DefaultConnection` → `ConnectionStrings:DefaultConnection`).
 
@@ -93,7 +94,7 @@ backend/
 ├── YerbasBM.sln                    # Solución
 ├── YerbasBM.API/                   # Capa de presentación
 │   ├── Controllers/                 # Endpoints REST (HealthController, CategoriesController, ProductsController, AuthController)
-│   ├── Program.cs                   # Composición de servicios y pipeline HTTP (incluye auth JWT y el seed del admin)
+│   ├── Program.cs                   # Composición de servicios y pipeline HTTP (incluye auth JWT, CORS y el seed del admin)
 │   └── appsettings.json             # Configuración (sin secretos)
 ├── YerbasBM.Application/            # Casos de uso / lógica de negocio
 │   ├── DTOs/                        # Data Transfer Objects (Category*, Product*, Login*)

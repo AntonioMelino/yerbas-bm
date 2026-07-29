@@ -474,9 +474,14 @@ VITE_WHATSAPP_NUMBER=5491151225690
   "Supabase": {
     "Url": "https://xxxx.supabase.co",
     "ServiceKey": "xxxx"
+  },
+  "Cors": {
+    "AllowedOrigins": ["https://yerbas-bm.vercel.app"]
   }
 }
 ```
+
+**Nota sobre CORS:** sin al menos un origen en `Cors:AllowedOrigins` (o la variable de entorno `Cors__AllowedOrigins__0` en Railway), el frontend deployado no puede llamar a la API — el backend no habilita ningún origen por defecto (fail-closed). Hay que configurarlo con la URL final de Vercel antes de que el frontend en producción funcione.
 
 ---
 

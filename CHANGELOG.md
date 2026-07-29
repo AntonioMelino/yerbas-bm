@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Feature: backend-cors
+- Rama: `feature/backend-cors`
+- Qué se hizo: Se agregó configuración de CORS al backend, requisito bloqueante para el deploy (frontend en Vercel y backend en Railway quedan en dominios distintos, así que sin esto el navegador rechaza toda request cross-origin en producción). Los orígenes permitidos se leen de `Cors:AllowedOrigins` (array), configurable por entorno vía `Cors__AllowedOrigins__0`, `__1`, etc. En desarrollo, `appsettings.Development.json` ya trae `http://localhost:5173` (dev server de Vite, aunque hoy el proxy de Vite hace que no sea estrictamente necesario para ese flujo). En producción, sin ningún origen configurado la policy no habilita ninguno (fail-closed, en vez de abrir a cualquier origen) y se loguea un warning al arrancar, igual que ya se hacía con `Jwt:Key` ausente. Antes de deployar el frontend, hay que setear `Cors__AllowedOrigins__0` en Railway con la URL final de Vercel.
+- Archivos principales afectados: `backend/YerbasBM.API/Program.cs`, `backend/YerbasBM.API/appsettings.json`, `backend/YerbasBM.API/appsettings.Development.json`, `backend/README.md`
+- Autor: Claude
+
 ## [2026-07-28] - Feature: mobile-polish
 - Rama: `feature/mobile-polish`
 - Qué se hizo: Pulido visual y de usabilidad exclusivo para vista mobile. En `ProductCard.tsx` se redujeron paddings, tamaños de fuente, badges y botón de agregar para que la card sea más compacta y legible en pantallas chicas; la descripción se oculta en mobile. En `CatalogSection.tsx` se redujeron chips y búsqueda, se ajustó el título y el grid pasa a 2 columnas en mobile. En `HomePage.tsx` se redujeron paddings y tamaños de tipografía en Hero, Destacados, Nosotros y CTA; el grid de destacados también es de 2 columnas en mobile. En `Navbar.tsx` se achicaron logo/botones, se compactó el badge del carrito y el menú mobile ahora es pantalla completa con links grandes y tipografía display.

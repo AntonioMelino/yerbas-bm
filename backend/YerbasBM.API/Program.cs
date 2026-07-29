@@ -72,6 +72,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// CORS: el frontend (Vercel) y el backend (Railway) quedan en dominios distintos en
+// producción, así que el navegador exige que el backend habilite explícitamente el
+// origen del frontend. Los orígenes permitidos vienen de Cors:AllowedOrigins
+// (appsettings.Development.json trae localhost:5173 para el dev server de Vite;
+// en producción se configura vía variable de entorno Cors__AllowedOrigins__0, __1, etc.
+// con el/los dominio/s de Vercel). Sin orígenes configurados, la policy no habilita
+// ninguno (fail-closed) en vez de abrir a cualquier origen.
+const string FrontendCorsPolicy = "Frontend";
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(FrontendCorsPolicy, policy =>
+    {
+        if (allowedOrigins.Length > 0)
+        {
+            policy.WithOrigins(allowedOrigins)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        }
+    });
+});
+
 var app = builder.Build();
 
 if (string.IsNullOrWhiteSpace(jwtKey))
@@ -82,6 +105,14 @@ if (string.IsNullOrWhiteSpace(jwtKey))
         "Jwt:Key no está configurado. El login de admin (/api/auth/login) va a fallar hasta que se configure (user-secrets o variable de entorno Jwt__Key, mínimo 32 bytes).");
 }
 
+if (allowedOrigins.Length == 0)
+{
+    // Mismo criterio que el warning de Jwt:Key: sin esto, el síntoma en producción es
+    // "el frontend no puede pegarle a la API" sin ninguna pista en los logs del backend.
+    app.Logger.LogWarning(
+        "Cors:AllowedOrigins está vacío. Ninguna request del navegador desde otro origen (ej. el frontend en Vercel) va a poder llamar a esta API hasta que se configure (variable de entorno Cors__AllowedOrigins__0).");
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -90,6 +121,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(FrontendCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();
