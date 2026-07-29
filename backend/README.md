@@ -36,6 +36,8 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=xxxx.supabas
 export ConnectionStrings__DefaultConnection="Host=xxxx.supabase.co;Database=postgres;Username=postgres;Password=xxxx;Port=5432;SSL Mode=Require;Trust Server Certificate=true"
 ```
 
+**Importante para deploys en la nube (Railway u otros):** usá el **connection pooler** de Supabase (`Project Settings → Database → Connection string → Session pooler`, host `aws-0-<region>.pooler.supabase.com`, usuario `postgres.<project-ref>`), no la conexión directa (`db.xxxx.supabase.co`). La conexión directa de Supabase resuelve solo por IPv6, y plataformas como Railway no tienen salida IPv6 — la conexión falla con `Network is unreachable` sin llegar a intentar el handshake. En desarrollo local esto no pasa (la mayoría de los ISPs sí dan salida IPv6), así que el síntoma solo aparece al deployar.
+
 ### Aplicar las migrations
 
 ```bash

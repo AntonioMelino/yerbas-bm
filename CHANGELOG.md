@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Fix: backend-supabase-pooler-docs
+- Rama: `fix/backend-supabase-pooler-docs`
+- Qué se hizo: Con el puerto ya bindeado correctamente, `/api/categories` en Railway fallaba con `Npgsql.NpgsqlException: Failed to connect to [IPv6...]:5432 - Network is unreachable`. La connection string apuntaba a la conexión directa de Supabase (`db.xxxx.supabase.co`), que resuelve solo por IPv6, y Railway no tiene salida IPv6. Se cambió `ConnectionStrings__DefaultConnection` en Railway al **connection pooler** de Supabase (host `aws-0-sa-east-1.pooler.supabase.com`, usuario `postgres.<project-ref>`, IPv4), y se documentó en `backend/README.md` para no repetir el mismo diagnóstico en futuros deploys. Verificado en producción: `/api/categories` devuelve las categorías reales.
+- Archivos principales afectados: `backend/README.md` (documentación; el fix real fue una variable de entorno en Railway, no un cambio de código)
+- Autor: Claude
+
 ## [2026-07-28] - Fix: backend-railway-port-binding
 - Rama: `feature/backend-railway-port`
 - Qué se hizo: Con el Dockerfile ya funcionando, el contenedor arrancaba pero escuchaba en el puerto 80 por defecto en vez del puerto que Railway le asigna dinámicamente (variable `PORT`), porque la variable `ASPNETCORE_URLS=http://0.0.0.0:${{PORT}}` configurada a mano en Railway no se interpolaba y quedaba con el puerto vacío (`http://0.0.0.0:`, log: "Overriding HTTP_PORTS '8080'... Binding to values defined by URLS... Now listening on: http://[::]:80"). Se agregó en `Program.cs` una lectura directa de la variable de entorno `PORT` al arrancar (`builder.WebHost.UseUrls(...)` si está presente), que bindea Kestrel al puerto real inyectado por Railway en runtime, sin depender de que la interpolación de variables de Railway funcione. Verificado en local con `PORT=4321`: Kestrel loguea `Now listening on: http://0.0.0.0:4321`.
