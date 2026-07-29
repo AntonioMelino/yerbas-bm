@@ -1,5 +1,11 @@
 # CHANGELOG.md — Yerbas BM
 
+## [2026-07-28] - Fix: backend-dockerfile-railway
+- Rama: `feature/backend-dockerfile`
+- Qué se hizo: El primer intento de deploy en Railway falló porque Railpack (su builder) no reconoce `YerbasBM.slnx` (formato de solución `.slnx`, más nuevo que el `.sln` clásico) y no lograba detectar que el proyecto es .NET (`Railpack could not determine how to build the app`). Se agregó `backend/Dockerfile` (multi-stage: SDK 8.0 para restore/publish, runtime `aspnet:8.0` para la imagen final, apuntando explícitamente a `YerbasBM.API.csproj`) y `backend/.dockerignore`. Un `Dockerfile` en el Root Directory tiene prioridad sobre la auto-detección de Railway, así que evita el problema sin tocar `YerbasBM.slnx` ni la forma de compilar en desarrollo local.
+- Archivos principales afectados: `backend/Dockerfile`, `backend/.dockerignore`
+- Autor: Claude
+
 ## [2026-07-28] - Feature: backend-cors
 - Rama: `feature/backend-cors`
 - Qué se hizo: Se agregó configuración de CORS al backend, requisito bloqueante para el deploy (frontend en Vercel y backend en Railway quedan en dominios distintos, así que sin esto el navegador rechaza toda request cross-origin en producción). Los orígenes permitidos se leen de `Cors:AllowedOrigins` (array), configurable por entorno vía `Cors__AllowedOrigins__0`, `__1`, etc. En desarrollo, `appsettings.Development.json` ya trae `http://localhost:5173` (dev server de Vite, aunque hoy el proxy de Vite hace que no sea estrictamente necesario para ese flujo). En producción, sin ningún origen configurado la policy no habilita ninguno (fail-closed, en vez de abrir a cualquier origen) y se loguea un warning al arrancar, igual que ya se hacía con `Jwt:Key` ausente. Antes de deployar el frontend, hay que setear `Cors__AllowedOrigins__0` en Railway con la URL final de Vercel.
