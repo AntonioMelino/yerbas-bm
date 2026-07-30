@@ -2,6 +2,8 @@
 
 E-commerce de yerba mate y productos relacionados: catálogo, carrito y pedido por WhatsApp, con panel de administración propio para el dueño del emprendimiento.
 
+**🔗 Demo en vivo:** [yerbas-bm.vercel.app](https://yerbas-bm.vercel.app/)
+
 > Toda la documentación de arquitectura, modelo de datos, contrato de API, diseño y flujo de trabajo está en [`CONTEXTO.md`](./CONTEXTO.md). Este README es solo la puerta de entrada rápida al proyecto.
 
 ---
@@ -33,6 +35,8 @@ Cada carpeta principal (`backend/`, `frontend/`) tiene su propio `README.md` con
 | Almacenamiento de imágenes | Supabase Storage |
 | Deploy backend | Railway |
 | Deploy frontend | Vercel |
+
+**Estado:** deployado y funcionando en producción (backend en Railway conectado a Supabase vía connection pooler, frontend en Vercel).
 
 ---
 
